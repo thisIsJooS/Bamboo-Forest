@@ -1,0 +1,72 @@
+{% extends 'base.njk' %}
+{% block content %}
+
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-success">익명게시판</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <form action="/boards/anonymous/post" method="POST" enctype="multipart/form-data">
+          <div class="form-group">
+            <input type="text" name="title" class="form-control form-control-user" id="title" placeholder="Title">
+          </div>
+          <div class="form-group">
+            <textarea name="content" class="form-control form-control-user" id="content" placeholder="Content" rows="15"></textarea>
+          </div>
+          <br/>
+
+          <div class="form-group">
+            <div class="img-preview">
+              <img
+          id="img-preview"
+          src=""
+          style="display: none"
+          width="250"
+          alt="미리보기"
+/>
+              <input id="img-url" type="hidden" name="url"/>
+            </div>
+            <div>
+              <label id="img-label" for="img">사진 업로드</label>
+              <input id="img" type="file" accept="image/*"/>
+            </div>
+          </div>
+
+          <input type="submit" class="btn btn-success btn-icon-split btn-sm" value="create">
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+  <script>
+    if (document.querySelector("#img")) {
+      document
+        .querySelector("#img")
+        .addEventListener("change", function (e) {
+          const formData = new FormData();
+          console.log(this, this.files);
+          formData.append("img", this.files[0]);
+          axios
+            .post("/boards/img", formData)
+            .then((res) => {
+              document
+                .querySelector("#img-url")
+                .value = res.data.url;
+              document
+                .querySelector("#img-preview")
+                .src = res.data.url;
+              document
+                .querySelector("#img-preview")
+                .style
+                .display = "inline";
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        });
+    }
+  </script>
+{% endblock %}

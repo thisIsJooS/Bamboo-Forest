@@ -11,7 +11,7 @@ const hpp = require("hpp");
 
 dotenv.config();
 const indexRouter = require("./routes/index");
-// const boardsRouter = require("./routes/boards");
+const boardsRouter = require("./routes/boards");
 const authRouter = require("./routes/auth");
 const { sequelize } = require("./models");
 const passportConfig = require("./passport");
@@ -63,7 +63,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/", indexRouter);
-// app.use("/boards", boardsRouter);
+app.use("/boards", boardsRouter);
 app.use("/auth", authRouter);
 
 app.use((req, res, next) => {

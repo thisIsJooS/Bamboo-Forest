@@ -8,7 +8,7 @@ router.use((req, res, next) => {
 });
 
 router.get("/", (req, res, next) => {
-  res.render("index", { title: "하이" });
+  res.redirect("/boards");
 });
 
 module.exports = router;
