@@ -1,3 +1,4 @@
+const sequelize = require("sequelize");
 const { Post, Board, User } = require("../models");
 
 exports.getPosts = async function (req, res, next) {
@@ -11,6 +12,30 @@ exports.getPosts = async function (req, res, next) {
       where: { BoardId: currentBoard.id },
       order: [["createdAt", "DESC"]],
       raw: true,
+      attributes: {
+        include: [
+          "id",
+          "title",
+          "content",
+          "img",
+          [
+            sequelize.fn(
+              "DATE_FORMAT",
+              sequelize.col("createdAt"),
+              "%Y-%m-%d %H:%i:%s"
+            ),
+            "createdAt",
+          ],
+          [
+            sequelize.fn(
+              "DATE_FORMAT",
+              sequelize.col("updatedAt"),
+              "%Y-%m-%d %H:%i:%s"
+            ),
+            "updatedAt",
+          ],
+        ],
+      },
     });
 
     const promises = posts.map(async (post) => {
