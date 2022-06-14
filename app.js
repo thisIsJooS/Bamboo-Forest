@@ -12,11 +12,11 @@ const hpp = require("hpp");
 dotenv.config();
 const indexRouter = require("./routes/index");
 // const boardsRouter = require("./routes/boards");
-// const authRouter = require("./routes/auth");
+const authRouter = require("./routes/auth");
 const { sequelize } = require("./models");
-// const passportConfig = require("./passport");
+const passportConfig = require("./passport");
 const app = express();
-// passportConfig(); // 패스포트 설정
+passportConfig(); // 패스포트 설정
 app.set("port", process.env.PORT || 8001);
 app.set("view engine", "njk");
 nunjucks.configure("views", {
@@ -24,14 +24,14 @@ nunjucks.configure("views", {
   watch: true,
 });
 
-// sequelize
-//   .sync({ force: false })
-//   .then(() => {
-//     console.log("데이터베이스 연결 성공");
-//   })
-//   .catch((err) => {
-//     console.error(err);
-//   });
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log("데이터베이스 연결 성공");
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 
 if (process.env.NODE_ENV === "production") {
   app.use(morgan("combined"));
@@ -64,7 +64,7 @@ app.use(passport.session());
 
 app.use("/", indexRouter);
 // app.use("/boards", boardsRouter);
-// app.use("/auth", authRouter);
+app.use("/auth", authRouter);
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
