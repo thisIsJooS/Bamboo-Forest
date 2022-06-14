@@ -36,7 +36,7 @@
                 </div>
 
                 <form class="user" method="POST" action="/auth/signup">
-                  <div class=" form-group row"></div>
+                  <div class="form-group row"></div>
                   <div class="form-group">
                     <input type="text" name="username" class="form-control form-control-user" id="exampleInputEmail" placeholder="Enter Your Nickname">
                   </div>
@@ -48,7 +48,10 @@
                       <input type="password" name="repeat" class="form-control form-control-user" id="exampleRepeatPassword" placeholder="Repeat Password">
                     </div>
                   </div>
-                  <input type="submit" class="btn btn-success btn-user btn-block" value="회원가입">
+                  {% if error_message %}
+                    <p class="form-group text-center">{{error_message}}</p>
+                  {% endif %}
+                  <input type="submit" class="btn btn-success btn-user btn-block" value="회원가입" id="submit" disabled>
 
                   <hr>
                   <a href="login" class="btn btn-google btn-user btn-block">
@@ -82,7 +85,28 @@
 
     <!-- Custom scripts for all pages-->
     <script src="/js/sb-admin-2.min.js "></script>
+    <script>
+      const password = document.querySelector('#exampleInputPassword');
+      const repeat = document.querySelector('#exampleRepeatPassword');
+      const submit = document.querySelector('#submit');
+
+      password.addEventListener('input', function (e) {
+        if (password.value && repeat.value && password.value === repeat.value) {
+          submit.disabled = false;
+        } else {
+          submit.disabled = true;
+        }
+      })
+
+      repeat.addEventListener('input', function (e) {
+        if (password.value && repeat.value && password.value === repeat.value) {
+          submit.disabled = false;
+        } else {
+          submit.disabled = true;
+        }
+      })
+    </script
 
   </body>
 
-</html>
+  </html>
