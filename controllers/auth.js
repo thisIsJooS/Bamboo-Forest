@@ -10,7 +10,7 @@ exports.postSignup = async function (req, res, next) {
   const { username, password } = req.body;
 
   try {
-    const exUser = await User.findOne({ where: { username } });
+    const exUser = await User.findOne({ where: { name: username } });
     if (exUser) {
       return res.render("register", {
         error_message: "이미 존재하는 아이디입니다.",
@@ -18,7 +18,7 @@ exports.postSignup = async function (req, res, next) {
     }
     const hash = await bcrypt.hash(password, 12);
     await User.create({
-      username,
+      name: username,
       password: hash,
     });
     return res.redirect("/");

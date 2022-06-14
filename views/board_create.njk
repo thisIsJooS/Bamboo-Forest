@@ -1,0 +1,15 @@
+{% extends 'base.njk' %}
+{% block content %}
+  <form action="/admin/board" method="POST">
+    <label for="boardName_eng">게시판 영어 이름</label>
+    <input type="text" name="boardName_eng"/>
+    <br/>
+
+    <label for="boardName_kor">게시판 한국 이름</label>
+    <input type="text" name="boardName_kor"/>
+    <br/>
+
+    <input type="submit"/>
+  </form>
+</body>
+{% endblock %}

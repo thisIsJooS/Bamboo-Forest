@@ -1,11 +1,30 @@
-const { Post, User } = require("../models");
+const { Post, Board, User } = require("../models");
 
 exports.getPosts = async function (req, res, next) {
+  const boardType = req.params.boardType;
   try {
-    const posts = await Post.findAll({
-      order: [["createdAt", "DESC"]],
+    const currentBoard = await Board.findOne({
+      where: { boardName_eng: boardType },
     });
-    res.render("anon_index", { posts });
+
+    const posts = await Post.findAll({
+      where: { BoardId: currentBoard.id },
+      order: [["createdAt", "DESC"]],
+      raw: true,
+    });
+
+    const promises = posts.map(async (post) => {
+      const author = await User.findOne({ where: { id: post.UserId } });
+      post.author = author.name;
+      return post;
+    });
+    await Promise.all(promises);
+
+    res.render("post_list", {
+      posts,
+      boardName_kor: currentBoard.boardName_kor,
+      boardType,
+    });
   } catch (error) {
     console.error(error);
     next(error);
@@ -13,19 +32,25 @@ exports.getPosts = async function (req, res, next) {
 };
 
 exports.getPostPage = function (req, res, next) {
-  res.render("anon_post_form");
+  const boardType = req.params.boardType;
+  res.render("post_form", { boardType });
 };
 
-exports.postPost = async function (req, res, next) {
+exports.createPost = async function (req, res, next) {
+  const boardType = req.params.boardType;
   try {
+    const currentBoard = await Board.findOne({
+      where: { boardName_eng: boardType },
+    });
     await Post.create({
       title: req.body.title,
       content: req.body.content,
       img: req.body.url,
       UserId: req.user.id,
+      BoardId: currentBoard.id,
     });
 
-    res.redirect("/");
+    res.redirect(`/boards/${boardType}`);
   } catch (error) {
     console.error(error);
     next(error);
@@ -37,12 +62,13 @@ exports.uploadImage = function (req, res, next) {
 };
 
 exports.getPostDetail = async function (req, res, next) {
+  const boardType = req.params.boardType;
   const postId = req.params.id;
   try {
     const post_detail = await Post.findOne({
       where: { id: postId },
     });
-    res.render("anon_detail", { post_detail });
+    res.render("post_detail", { post_detail });
   } catch (error) {
     console.error(error);
     next(error);

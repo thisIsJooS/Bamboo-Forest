@@ -1,28 +1,24 @@
 const Sequelize = require("sequelize");
 
-module.exports = class Post extends Sequelize.Model {
+module.exports = class Board extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        title: {
-          type: Sequelize.STRING(50),
+        boardName_eng: {
+          type: Sequelize.STRING(30),
           allowNull: false,
         },
-        content: {
-          type: Sequelize.STRING(500),
+        boardName_kor: {
+          type: Sequelize.STRING(30),
           allowNull: false,
-        },
-        img: {
-          type: Sequelize.STRING(200),
-          allowNull: true,
         },
       },
       {
         sequelize,
         timestamps: true,
         underscored: false,
-        modelName: "Post",
-        tableName: "posts",
+        modelName: "Board",
+        tableName: "boards",
         paranoid: false,
         charset: "utf8mb4",
         collate: "utf8mb4_general_ci",
@@ -31,7 +27,8 @@ module.exports = class Post extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.Post.belongsTo(db.User);
-    db.Post.belongsTo(db.Board);
+    db.Board.hasMany(db.Post, {
+      onDelete: "cascade",
+    });
   }
 };

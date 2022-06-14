@@ -38,20 +38,18 @@ router.post(
   boardsController.uploadImage
 );
 
-// Anonymous Board
-router.get("/", boardsController.getPosts);
+// board
+router.get("/:boardType", boardsController.getPosts);
 
-router.get("/anonymous", boardsController.getPosts);
-
-router.get("/anonymous/post", isLoggedIn, boardsController.getPostPage);
+router.get("/:boardType/post", isLoggedIn, boardsController.getPostPage);
 
 router.post(
-  "/anonymous/post",
+  "/:boardType/post",
   isLoggedIn,
   upload2.none(),
-  boardsController.postPost
+  boardsController.createPost
 );
 
-router.get("/anonymous/detail/:id", boardsController.getPostDetail);
+router.get("/:boardType/detail/:id", boardsController.getPostDetail);
 
 module.exports = router;

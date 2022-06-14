@@ -8,7 +8,7 @@ router.use((req, res, next) => {
 });
 
 router.get("/", (req, res, next) => {
-  res.redirect("/boards");
+  res.render("base");
 });
 
 module.exports = router;
