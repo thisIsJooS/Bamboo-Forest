@@ -92,8 +92,32 @@ exports.getPostDetail = async function (req, res, next) {
   try {
     const post_detail = await Post.findOne({
       where: { id: postId },
+      attributes: {
+        include: [
+          "id",
+          "title",
+          "content",
+          "img",
+          [
+            sequelize.fn(
+              "DATE_FORMAT",
+              sequelize.col("createdAt"),
+              "%Y-%m-%d %H:%i:%s"
+            ),
+            "createdAt",
+          ],
+          [
+            sequelize.fn(
+              "DATE_FORMAT",
+              sequelize.col("updatedAt"),
+              "%Y-%m-%d %H:%i:%s"
+            ),
+            "updatedAt",
+          ],
+        ],
+      },
     });
-    res.render("post_detail", { post_detail });
+    res.render("post_detail", { post_detail, boardType });
   } catch (error) {
     console.error(error);
     next(error);

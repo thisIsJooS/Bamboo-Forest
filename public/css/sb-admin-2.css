@@ -73,6 +73,10 @@ body {
   outline: 0 !important;
 }
 
+.image{
+  width: 80%;
+}
+
 hr {
   box-sizing: content-box;
   height: 0;

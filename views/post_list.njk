@@ -20,7 +20,7 @@
             {% for post in posts %}
               <tr>
                 <td>
-                  <a href="/boards/anonymous/detail/{{ post.id }}">{{ post.title }}</a>
+                  <a href="/boards/{{boardType}}/detail/{{ post.id }}">{{ post.title }}</a>
                 </td>
                 <td>{{ post.createdAt }}</td>
 

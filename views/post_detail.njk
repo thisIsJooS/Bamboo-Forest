@@ -1,19 +1,23 @@
 {% extends 'base.njk' %}
 
 {% block content %}
-  <h2 class="alert alert-primary">
-    {{ post_detail.title }}</h2>
-  <span class="badge rounded-pill bg-light">{{ post_detail.createdAt}}</span>
-  <br/>
-  <hr/>
-  {% if post_detail.img %}
-    <img src="{{post_detail.img}}" alt="이미지"/>
-  {% endif %}
-  <p>
-    {{ post_detail.content }}
-  </p>
-  <br/>
-  <hr/>
+  <div>
+    <h2 class="alert alert-primary">
+      {{ post_detail.title }}</h2>
+    <span class="badge rounded-pill bg-light">{{ post_detail.createdAt}}</span>
+    <br/>
+    <hr/>
+    {% if post_detail.img %}
+      <img class="image" src="{{post_detail.img}}" alt="이미지"/>
+    {% endif %}
+    <br/>
+    <br/>
+    <p>
+      {{ post_detail.content }}
+    </p>
+    <br/>
+    <hr/>
+  </div>
 
   <!-- 댓글 목록 공간 -->
   {% for comment in post_detail.comment_set.all %}
