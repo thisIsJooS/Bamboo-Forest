@@ -56,7 +56,7 @@ exports.getPosts = async function (req, res, next) {
   }
 };
 
-exports.getPostPage = function (req, res, next) {
+exports.createPostPage = function (req, res, next) {
   const boardType = req.params.boardType;
   res.render("post_form", { boardType });
 };
@@ -70,7 +70,7 @@ exports.createPost = async function (req, res, next) {
     await Post.create({
       title: req.body.title,
       content: req.body.content,
-      img: req.body.url,
+      img: req.body.img_url,
       UserId: req.user.id,
       BoardId: currentBoard.id,
     });
@@ -88,7 +88,7 @@ exports.uploadImage = function (req, res, next) {
 
 exports.getPostDetail = async function (req, res, next) {
   const boardType = req.params.boardType;
-  const postId = req.params.id;
+  const postId = req.params.post_id;
   try {
     const post_detail = await Post.findOne({
       where: { id: postId },
@@ -117,9 +117,60 @@ exports.getPostDetail = async function (req, res, next) {
         ],
       },
     });
-    res.render("post_detail", { post_detail, boardType });
+    const author = await User.findOne({ where: { id: post_detail.UserId } });
+    res.render("post_detail", { post_detail, boardType, author: author.name });
   } catch (error) {
     console.error(error);
     next(error);
   }
 };
+
+exports.updatePostPage = async function (req, res, next) {
+  const post_id = req.params.post_id;
+  try {
+    const post = await Post.findOne({ where: { id: post_id } });
+    if (req.user?.id !== post.UserId) {
+      return res.write(
+        "<script>alert('not valid access');window.location='/';</script>"
+      );
+    }
+    res.render("post_update", { post });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+exports.updatePost = async function (req, res, next) {
+  const post_id = req.params.post_id;
+  try {
+    const post = await Post.findOne({ where: { id: post_id } });
+    if (req.user?.id !== post.UserId) {
+      return res.write(
+        "<script>alert('not valid access');window.location='/';</script>"
+      );
+    }
+
+    const currentBoard = await Board.findOne({ where: { id: post.BoardId } });
+
+    await Post.update(
+      {
+        title: req.body.title,
+        content: req.body.content,
+        img: req.body.img_url,
+      },
+      {
+        where: { id: post_id, UserId: req.user?.id },
+      }
+    );
+
+    return res.status(201).json({
+      redirect: `/boards/${currentBoard.boardName_eng}/detail/${post_id}`,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+exports.deletePost = async function (req, res, next) {};

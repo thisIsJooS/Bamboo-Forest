@@ -41,7 +41,7 @@ router.post(
 // board
 router.get("/:boardType", boardsController.getPosts);
 
-router.get("/:boardType/post", isLoggedIn, boardsController.getPostPage);
+router.get("/:boardType/post", isLoggedIn, boardsController.createPostPage);
 
 router.post(
   "/:boardType/post",
@@ -50,6 +50,12 @@ router.post(
   boardsController.createPost
 );
 
-router.get("/:boardType/detail/:id", boardsController.getPostDetail);
+router.get("/:boardType/detail/:post_id", boardsController.getPostDetail);
+
+router.get("/update/:post_id", isLoggedIn, boardsController.updatePostPage);
+
+router.post("/update/:post_id", isLoggedIn, boardsController.updatePost);
+
+router.get("/delete/:post_id", isLoggedIn, boardsController.deletePostPage);
 
 module.exports = router;

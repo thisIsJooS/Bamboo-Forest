@@ -2,9 +2,18 @@
 
 {% block content %}
   <div>
-    <h2 class="alert alert-primary">
-      {{ post_detail.title }}</h2>
+    <h2 class="alert alert-primary">{{ post_detail.title }}</h2>
+
+    {% if boardType == 'anonymous' %}
+      <span class="badge rounded-pill bg-light">익명</span>
+    {% else %}
+      <span class="badge rounded-pill bg-light">{{ author }}</span>
+    {% endif %}
     <span class="badge rounded-pill bg-light">{{ post_detail.createdAt}}</span>
+    {% if post_detail.UserId == user.id %}
+      <a class="badge rounded-pill bg-light" href="/boards/update/{{post_detail.id}}">수정</a>
+      <a class="badge rounded-pill bg-light" href="/boards/delete/{{post_detail.id}}">삭제</a>
+    {% endif %}
     <br/>
     <hr/>
     {% if post_detail.img %}
