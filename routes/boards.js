@@ -50,13 +50,13 @@ router.post(
   boardsController.createPost
 );
 
-router.get("/:boardType/detail/:post_id", boardsController.getPostDetail);
-
 router.get("/updatePage/:post_id", isLoggedIn, boardsController.updatePostPage);
 
 router.put("/:post_id", isLoggedIn, boardsController.updatePost);
 
 router.delete("/:post_id", isLoggedIn, boardsController.deletePost);
+
+router.get("/:boardType/detail/:post_id", boardsController.getPostDetail);
 
 router.post("/comment/:post_id", isLoggedIn, boardsController.createComment);
 

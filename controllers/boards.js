@@ -1,5 +1,8 @@
 const sequelize = require("sequelize");
 const { Post, Board, User, Comment } = require("../models");
+const fs = require("fs");
+const path = require("path");
+const { post } = require("../routes/boards");
 
 exports.getPosts = async function (req, res, next) {
   const boardType = req.params.boardType;
@@ -227,11 +230,17 @@ exports.deletePost = async function (req, res, next) {
       );
     }
 
-    const currentBoard = await Board.findOne({ where: { id: post.BoardId } });
-
     await Post.destroy({ where: { id: post_id, UserId: req.user?.id } });
+    // 서버 내의 사진도 삭제
+    if (post.img) {
+      const imgFileName = post.img.split("/")[2];
+      const filePath = path.join(__dirname, "..", "uploads", imgFileName);
+      fs.unlink(filePath, (err) => {
+        console.error(err);
+      });
+    }
 
-    res.redirect(`/boards/${currentBoard.boardName_eng}`);
+    return res.sendStatus(204);
   } catch (error) {
     console.error(error);
     next(error);
