@@ -72,13 +72,13 @@ app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
 
 app.use((req, res, next) => {
-  const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
-  res.sendStatus(404);
+  console.error(`${req.method} ${req.url} 라우터가 없습니다.`);
+  res.status(404).render("404");
 });
 
 app.use((error, req, res, next) => {
   console.error(error);
-  res.sendStatus(500);
+  res.status(500).render("500");
 });
 
 app.listen(app.get("port"), () => {
