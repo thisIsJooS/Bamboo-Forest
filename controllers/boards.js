@@ -56,9 +56,19 @@ exports.getPosts = async function (req, res, next) {
   }
 };
 
-exports.createPostPage = function (req, res, next) {
+exports.createPostPage = async function (req, res, next) {
   const boardType = req.params.boardType;
-  res.render("post_form", { boardType });
+
+  try {
+    const board = await Board.findOne({
+      where: { boardName_eng: boardType },
+    });
+    const boardName_kor = board.boardName_kor;
+    res.render("post_form", { boardType, boardName_kor });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
 };
 
 exports.createPost = async function (req, res, next) {
@@ -67,7 +77,7 @@ exports.createPost = async function (req, res, next) {
     const currentBoard = await Board.findOne({
       where: { boardName_eng: boardType },
     });
-    await Post.create({
+    const post = await Post.create({
       title: req.body.title,
       content: req.body.content,
       img: req.body.img_url,
@@ -75,7 +85,7 @@ exports.createPost = async function (req, res, next) {
       BoardId: currentBoard.id,
     });
 
-    res.redirect(`/boards/${boardType}`);
+    res.redirect(`/boards/${boardType}/detail/${post.id}`);
   } catch (error) {
     console.error(error);
     next(error);
@@ -258,3 +268,22 @@ exports.createComment = async function (req, res, next) {
 function format_date(date) {
   return require("moment")(date).format("YYYY-MM-DD HH:mm:ss");
 }
+
+exports.deleteComment = async function (req, res, next) {
+  const post_id = req.params.post_id;
+  const comment_id = req.params.comment_id;
+  try {
+    const comment = await Comment.findOne({ where: { id: comment_id } });
+    if (comment.UserId !== req.user?.id) {
+      return res.write(
+        "<script>alert('not valid access');window.location='/';</script>"
+      );
+    }
+
+    await Comment.destroy({ where: { id: comment_id, PostId: post_id } });
+    return res.json({ comment_id });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};

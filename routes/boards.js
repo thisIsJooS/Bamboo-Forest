@@ -52,12 +52,18 @@ router.post(
 
 router.get("/:boardType/detail/:post_id", boardsController.getPostDetail);
 
-router.get("/update/:post_id", isLoggedIn, boardsController.updatePostPage);
+router.get("/updatePage/:post_id", isLoggedIn, boardsController.updatePostPage);
 
-router.post("/update/:post_id", isLoggedIn, boardsController.updatePost);
+router.put("/:post_id", isLoggedIn, boardsController.updatePost);
 
-router.get("/delete/:post_id", isLoggedIn, boardsController.deletePost);
+router.delete("/:post_id", isLoggedIn, boardsController.deletePost);
 
 router.post("/comment/:post_id", isLoggedIn, boardsController.createComment);
+
+router.delete(
+  "/comment/:post_id/:comment_id",
+  isLoggedIn,
+  boardsController.deleteComment
+);
 
 module.exports = router;

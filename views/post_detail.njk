@@ -11,8 +11,10 @@
     {% endif %}
     <span class="badge rounded-pill bg-light">{{ post_detail.createdAt}}</span>
     {% if post_detail.UserId == user.id %}
-      <a class="badge rounded-pill bg-light" href="/boards/update/{{post_detail.id}}">수정</a>
-      <a class="badge rounded-pill bg-light" href="/boards/delete/{{post_detail.id}}">삭제</a>
+      <a class="badge rounded-pill bg-light" href="/boards/updatePage/{{post_detail.id}}">수정</a>
+      <a class="badge rounded-pill bg-light" >
+        <span id="delete-post" style="cursor: pointer;">삭제</span>
+      </a>
     {% endif %}
     <br/>
     <hr/>
@@ -30,13 +32,20 @@
 
   <!-- 댓글 목록 공간 -->
   <section id="commentBox">
-    <h5 id="comments-count">{{comments.length}}개의 댓글</h5>
+    <h5>
+      <span id="comments-count">{{comments.length}}</span>개의 댓글
+    </h5>
     <hr>
     {% for comment in comments %}
-      <div>
+      <div id="comment-{{comment.id}}" class="comment">
         <span class="badge rounded-pill bg-light">{{ comment.author }}</span>
         <span class="badge rounded-pill bg-light">{{ comment.createdAt }}</span>
-        <p class="rounded-pill bg-light">{{comment.comment}}</p>
+        {% if comment.UserId === user.id %}
+          <a class="badge rounded-pill bg-light" >
+            <span class="delete-comment" data-postid="{{post_detail.id}}" data-commentid="{{comment.id}}" style="cursor: pointer;">삭제</span>
+          </a>
+        {% endif %}
+        <p class="rounded-pill bg-light">{{ comment.comment }}</p>
         <hr>
       </div>
     {% endfor %}
@@ -56,6 +65,24 @@
 
 {% block script %}
   <script>
+    function deleteComment(e) {
+      axios
+        .delete(`/boards/comment/${e.target.dataset.postid}/${e.target.dataset.commentid}`)
+        .then((res) => {
+          document
+            .querySelector(`#comment-${res.data.comment_id}`)
+            .remove();
+          updateCountComments();
+        })
+        .catch(console.error);
+    }
+
+    function updateCountComments() {
+      const span_count_comment = document.querySelector('#comments-count');
+      const count = document.querySelectorAll('.comment');
+      span_count_comment.textContent = count.length || 0;
+    }
+
     if (document.querySelector('#submit')) {
 
       document
@@ -69,6 +96,8 @@
             })
             .then((res) => {
               const div = document.createElement('div');
+              div.setAttribute('id', `comment-${res.data.comment.id}`);
+              div.setAttribute('class', 'comment');
 
               const author_span = document.createElement('span');
               author_span
@@ -84,14 +113,35 @@
               date_span.textContent = res.data.comment_createdAt;
               div.appendChild(date_span);
 
+              const a = document.createElement('a');
+              a
+                .classList
+                .add('badge', 'rounded-pill', 'bg-light');
+              const delete_span = document.createElement('span');
+              delete_span
+                .classList
+                .add('delete-comment');
+              delete_span.setAttribute('data-postid', {{post_detail.id}});
+              delete_span.setAttribute('data-commentid', res.data.comment.id);
+              delete_span.setAttribute('style', "cursor: pointer;");
+              delete_span.textContent = '삭제';
+              delete_span.addEventListener('click', deleteComment);
+
+              a.appendChild(delete_span);
+              div.appendChild(a);
+
               const p = document.createElement('p');
               p.textContent = res.data.comment.comment;
-              div.appendChild(p)
-              div.appendChild(document.createElement('hr'))
+              p
+                .classList
+                .add('rounded-pill', 'bg-light');
+              div.appendChild(p);
+              div.appendChild(document.createElement('hr'));
 
               const commentSection = document.querySelector('#commentBox');
               commentSection.appendChild(div);
 
+              updateCountComments();
             })
             .catch(console.error);
 
@@ -108,6 +158,25 @@
           alert('로그인을 하신 후 이용해 주시기 바랍니다.');
           window.location = `/auth/login?next_url=${window.location.href}`;
         })
+    }
+
+    if (document.querySelector('#delete-post')) {
+      document
+        .querySelector('#delete-post')
+        .addEventListener('click', function (e) {
+          axios
+            .delete('/boards/{{post_detail.id}}')
+            .then(window.location = `/boards/{{boardType}}`)
+            .catch(console.error)
+          });
+    }
+
+    if (document.querySelectorAll('.delete-comment')) {
+      document
+        .querySelectorAll('.delete-comment')
+        .forEach((element) => {
+          element.addEventListener('click', deleteComment);
+        });
     }
   </script>
 {% endblock %}
