@@ -38,7 +38,11 @@
     <hr>
     {% for comment in comments %}
       <div id="comment-{{comment.id}}" class="comment">
-        <span class="badge rounded-pill bg-light">{{ comment.author }}</span>
+        {% if boardType == 'anonymous' %}
+          <span class="badge rounded-pill bg-light">익명</span>
+        {% else %}
+          <span class="badge rounded-pill bg-light">{{ comment.author }}</span>
+        {% endif %}
         <span class="badge rounded-pill bg-light">{{ comment.createdAt }}</span>
         {% if comment.UserId === user.id %}
           <a class="badge rounded-pill bg-light" >
@@ -103,7 +107,9 @@
               author_span
                 .classList
                 .add('badge', 'rounded-pill', 'bg-light');
-              author_span.textContent = res.data.comment_author;
+              author_span.textContent = `{{boardType}}` === 'anonymous'
+                ? '익명'
+                : res.data.comment_author;
               div.appendChild(author_span);
 
               const date_span = document.createElement('span');
