@@ -1,3 +1,4 @@
+const { OptimisticLockError } = require("sequelize");
 const sequelize = require("sequelize");
 const { Post, Board, User } = require("../models");
 
@@ -173,4 +174,23 @@ exports.updatePost = async function (req, res, next) {
   }
 };
 
-exports.deletePost = async function (req, res, next) {};
+exports.deletePost = async function (req, res, next) {
+  const post_id = req.params.post_id;
+  try {
+    const post = await Post.findOne({ where: { id: post_id } });
+    if (req.user?.id !== post.UserId) {
+      return res.write(
+        "<script>alert('not valid access');window.location='/';</script>"
+      );
+    }
+
+    const currentBoard = await Board.findOne({ where: { id: post.BoardId } });
+
+    await Post.destroy({ where: { id: post_id, UserId: req.user?.id } });
+
+    res.redirect(`/boards/${currentBoard.boardName_eng}`);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};

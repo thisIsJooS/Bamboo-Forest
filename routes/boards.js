@@ -56,6 +56,6 @@ router.get("/update/:post_id", isLoggedIn, boardsController.updatePostPage);
 
 router.post("/update/:post_id", isLoggedIn, boardsController.updatePost);
 
-router.get("/delete/:post_id", isLoggedIn, boardsController.deletePostPage);
+router.get("/delete/:post_id", isLoggedIn, boardsController.deletePost);
 
 module.exports = router;
