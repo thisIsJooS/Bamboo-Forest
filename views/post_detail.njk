@@ -29,18 +29,85 @@
   </div>
 
   <!-- 댓글 목록 공간 -->
-  {% for comment in post_detail.comment_set.all %}
-    <span class="badge rounded-pill bg-light">{{ comment.date}}</span>
-    {{ comment }}
+  <section id="commentBox">
+    <h5 id="comments-count">{{comments.length}}개의 댓글</h5>
     <hr>
-  {% endfor %}
+    {% for comment in comments %}
+      <div>
+        <span class="badge rounded-pill bg-light">{{ comment.author }}</span>
+        <span class="badge rounded-pill bg-light">{{ comment.createdAt }}</span>
+        <p class="rounded-pill bg-light">{{comment.comment}}</p>
+        <hr>
+      </div>
+    {% endfor %}
+  </section>
 
   <!-- 댓글 입력 공간 -->
-  <form method="POST" action="">
+  {% if user %}
     <div class="form-group">
-      {{ comment_form }}
+      <textarea  name="comment" id="comment" class="form-control form-control-user" placeholder="댓글을 입력해주세요." rows="3"></textarea>
     </div>
-    <input type="submit" class="btn btn-primary btn-icon-split btn-sm" value="댓글 입력">
-  </form>
+    <div id="submit" class="btn btn-primary btn-icon-split btn-sm" value="댓글 입력">댓글 입력</div>
+  {% else %}
+    <textarea  name="comment" id="disabled-comment" class="form-control form-control-user" placeholder="댓글을 작성하려면 로그인 해주세요." rows="2" ></textarea>
+  {% endif %}
 
+{% endblock %}
+
+{% block script %}
+  <script>
+    if (document.querySelector('#submit')) {
+
+      document
+        .querySelector('#submit')
+        .addEventListener('click', function (e) {
+          axios
+            .post('/boards/comment/{{post_detail.id}}', {
+              comment: document
+                .querySelector('#comment')
+                .value
+            })
+            .then((res) => {
+              const div = document.createElement('div');
+
+              const author_span = document.createElement('span');
+              author_span
+                .classList
+                .add('badge', 'rounded-pill', 'bg-light');
+              author_span.textContent = res.data.comment_author;
+              div.appendChild(author_span);
+
+              const date_span = document.createElement('span');
+              date_span
+                .classList
+                .add('badge', 'rounded-pill', 'bg-light');
+              date_span.textContent = res.data.comment_createdAt;
+              div.appendChild(date_span);
+
+              const p = document.createElement('p');
+              p.textContent = res.data.comment.comment;
+              div.appendChild(p)
+              div.appendChild(document.createElement('hr'))
+
+              const commentSection = document.querySelector('#commentBox');
+              commentSection.appendChild(div);
+
+            })
+            .catch(console.error);
+
+          document
+            .querySelector('#comment')
+            .value = '';
+        });
+    }
+
+    if (document.querySelector('#disabled-comment')) {
+      document
+        .querySelector('#disabled-comment')
+        .addEventListener('click', function (e) {
+          alert('로그인을 하신 후 이용해 주시기 바랍니다.');
+          window.location = `/auth/login?next_url=${window.location.href}`;
+        })
+    }
+  </script>
 {% endblock %}

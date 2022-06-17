@@ -2,11 +2,11 @@ const passport = require("passport");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 
-exports.getSignup = function (req, res, next) {
+exports.getSignupPage = function (req, res, next) {
   res.render("register");
 };
 
-exports.postSignup = async function (req, res, next) {
+exports.signup = async function (req, res, next) {
   const { username, password } = req.body;
 
   try {
@@ -28,11 +28,11 @@ exports.postSignup = async function (req, res, next) {
   }
 };
 
-exports.getLogin = function (req, res, next) {
-  res.render("login");
+exports.getLoginPage = function (req, res, next) {
+  res.render("login", { next_url: req.query?.next_url });
 };
 
-exports.postLogin = function (req, res, next) {
+exports.login = function (req, res, next) {
   passport.authenticate("local", (authError, user, info) => {
     if (authError) {
       console.error(authError);
@@ -48,7 +48,13 @@ exports.postLogin = function (req, res, next) {
         console.error(loginError);
         return next(loginError);
       }
-      return res.redirect("/");
+
+      if (req.query.next_url) {
+        console.log("~~~~", req.query.next_url);
+        return res.redirect(req.query.next_url);
+      } else {
+        return res.redirect("/");
+      }
     });
   })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 };

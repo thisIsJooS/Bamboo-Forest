@@ -1,6 +1,5 @@
-const { OptimisticLockError } = require("sequelize");
 const sequelize = require("sequelize");
-const { Post, Board, User } = require("../models");
+const { Post, Board, User, Comment } = require("../models");
 
 exports.getPosts = async function (req, res, next) {
   const boardType = req.params.boardType;
@@ -89,10 +88,10 @@ exports.uploadImage = function (req, res, next) {
 
 exports.getPostDetail = async function (req, res, next) {
   const boardType = req.params.boardType;
-  const postId = req.params.post_id;
+  const post_id = req.params.post_id;
   try {
     const post_detail = await Post.findOne({
-      where: { id: postId },
+      where: { id: post_id },
       attributes: {
         include: [
           "id",
@@ -118,8 +117,42 @@ exports.getPostDetail = async function (req, res, next) {
         ],
       },
     });
+
+    const comments = await Comment.findAll({
+      where: { PostId: post_id },
+      attributes: {
+        include: [
+          "id",
+          "comment",
+          [
+            sequelize.fn(
+              "DATE_FORMAT",
+              sequelize.col("createdAt"),
+              "%Y-%m-%d %H:%i:%s"
+            ),
+            "createdAt",
+          ],
+        ],
+      },
+    });
+
     const author = await User.findOne({ where: { id: post_detail.UserId } });
-    res.render("post_detail", { post_detail, boardType, author: author.name });
+
+    const promises = comments.map(async (comment) => {
+      const commentAuthor = await User.findOne({
+        where: { id: comment.UserId },
+      });
+      comment.author = commentAuthor.name;
+      return comment;
+    });
+    await Promise.all(promises);
+
+    res.render("post_detail", {
+      post_detail,
+      boardType,
+      author: author.name,
+      comments,
+    });
   } catch (error) {
     console.error(error);
     next(error);
@@ -194,3 +227,34 @@ exports.deletePost = async function (req, res, next) {
     next(error);
   }
 };
+
+exports.createComment = async function (req, res, next) {
+  const post_id = req.params.post_id;
+  try {
+    const comment = await Comment.create({
+      comment: req.body.comment,
+      PostId: post_id,
+      UserId: req.user.id,
+    });
+
+    const author = await User.findOne({
+      where: { id: req.user.id },
+      attributes: {
+        include: ["name"],
+      },
+    });
+
+    return res.json({
+      comment,
+      comment_author: author.name,
+      comment_createdAt: format_date(comment.createdAt),
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+function format_date(date) {
+  return require("moment")(date).format("YYYY-MM-DD HH:mm:ss");
+}

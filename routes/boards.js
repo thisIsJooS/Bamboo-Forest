@@ -58,4 +58,6 @@ router.post("/update/:post_id", isLoggedIn, boardsController.updatePost);
 
 router.get("/delete/:post_id", isLoggedIn, boardsController.deletePost);
 
+router.post("/comment/:post_id", isLoggedIn, boardsController.createComment);
+
 module.exports = router;

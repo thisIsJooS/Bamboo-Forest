@@ -5,13 +5,13 @@ const authController = require("../controllers/auth");
 
 const router = express.Router();
 
-router.get("/signup", isNotLoggedIn, authController.getSignup);
+router.get("/signup", isNotLoggedIn, authController.getSignupPage);
 
-router.post("/signup", isNotLoggedIn, authController.postSignup);
+router.post("/signup", isNotLoggedIn, authController.signup);
 
-router.get("/login", isNotLoggedIn, authController.getLogin);
+router.get("/login", isNotLoggedIn, authController.getLoginPage);
 
-router.post("/login", isNotLoggedIn, authController.postLogin);
+router.post("/login", isNotLoggedIn, authController.login);
 
 router.get("/logout", isLoggedIn, authController.logout);
 
