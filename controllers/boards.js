@@ -1,12 +1,18 @@
 const sequelize = require("sequelize");
 const { Post, Board, User, Comment } = require("../models");
 const fs = require("fs");
+const fsExtra = require("fs-extra");
 const path = require("path");
-const { post } = require("../routes/boards");
 
 exports.getPosts = async function (req, res, next) {
   const boardType = req.params.boardType;
   try {
+    await fsExtra.emptyDir(path.join(__dirname, "..", "pre-uploads"), (err) => {
+      if (err) {
+        console.error(err);
+      }
+    });
+
     const currentBoard = await Board.findOne({
       where: { boardName_eng: boardType },
     });
@@ -95,8 +101,8 @@ exports.createPost = async function (req, res, next) {
   }
 };
 
-exports.uploadImage = function (req, res, next) {
-  res.json({ url: `/img/${req.file.filename}` });
+exports.preUploadImage = function (req, res, next) {
+  res.json({ url: `/pre-img/${req.file.filename}` });
 };
 
 exports.getPostDetail = async function (req, res, next) {
@@ -211,6 +217,14 @@ exports.updatePost = async function (req, res, next) {
       }
     );
 
+    if (post.img !== req.body.img_url) {
+      const imgFileName = post.img.split("/")[2];
+      const filePath = path.join(__dirname, "..", "uploads", imgFileName);
+      fs.unlink(filePath, (err) => {
+        console.error(err);
+      });
+    }
+
     return res.status(201).json({
       redirect: `/boards/${currentBoard.boardName_eng}/detail/${post_id}`,
     });
@@ -231,7 +245,7 @@ exports.deletePost = async function (req, res, next) {
     }
 
     await Post.destroy({ where: { id: post_id, UserId: req.user?.id } });
-    // 서버 내의 사진도 삭제
+
     if (post.img) {
       const imgFileName = post.img.split("/")[2];
       const filePath = path.join(__dirname, "..", "uploads", imgFileName);

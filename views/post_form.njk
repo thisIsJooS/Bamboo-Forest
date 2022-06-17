@@ -23,7 +23,7 @@
             </div>
             <div>
               <label id="img-label" for="img">사진 업로드</label>
-              <input id="img" type="file" accept="image/*"/>
+              <input id="img" type="file" name="image" accept="image/*"/>
             </div>
           </div>
 
@@ -44,11 +44,14 @@
           console.log(this, this.files);
           formData.append("img", this.files[0]);
           axios
-            .post("/boards/img", formData)
+            .post("/boards/pre-img", formData)
             .then((res) => {
               document
                 .querySelector("#img-url")
-                .value = res.data.url;
+                .value = res
+                .data
+                .url
+                .replace('pre-', '');
               document
                 .querySelector("#img-preview")
                 .src = res.data.url;

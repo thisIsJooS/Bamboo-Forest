@@ -14,6 +14,7 @@ const indexRouter = require("./routes/index");
 const boardsRouter = require("./routes/boards");
 const authRouter = require("./routes/auth");
 const adminRouter = require("./routes/admin");
+const fs = require("fs");
 
 const { sequelize } = require("./models");
 const passportConfig = require("./passport");
@@ -55,6 +56,7 @@ const sessionOption = {
 
 app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/pre-img", express.static(path.join(__dirname, "pre-uploads")));
 app.use("/img", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

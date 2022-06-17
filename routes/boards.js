@@ -8,18 +8,10 @@ const boardsController = require("../controllers/boards");
 
 const router = express.Router();
 
-// Image Upload
-try {
-  fs.readdirSync("uploads");
-} catch (error) {
-  console.error("uploads 폴더가 없어 uploads 폴더를 생성합니다.");
-  fs.mkdirSync("uploads");
-}
-
-const upload = multer({
+const preUpload = multer({
   storage: multer.diskStorage({
     destination(req, file, cb) {
-      cb(null, "uploads/");
+      cb(null, "pre-uploads/");
     },
     filename(req, file, cb) {
       const ext = path.extname(file.originalname);
@@ -29,13 +21,23 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-const upload2 = multer();
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, cb) {
+      cb(null, "uploads/");
+    },
+    filename(req, file, cb) {
+      cb(null, req.body.img_url.split("/")[2]);
+    },
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
 
 router.post(
-  "/img",
+  "/pre-img",
   isLoggedIn,
-  upload.single("img"),
-  boardsController.uploadImage
+  preUpload.single("img"),
+  boardsController.preUploadImage
 );
 
 // board
@@ -46,13 +48,18 @@ router.get("/:boardType/post", isLoggedIn, boardsController.createPostPage);
 router.post(
   "/:boardType/post",
   isLoggedIn,
-  upload2.none(),
+  upload.single("image"),
   boardsController.createPost
 );
 
 router.get("/updatePage/:post_id", isLoggedIn, boardsController.updatePostPage);
 
-router.put("/:post_id", isLoggedIn, boardsController.updatePost);
+router.put(
+  "/:post_id",
+  isLoggedIn,
+  upload.single("image"),
+  boardsController.updatePost
+);
 
 router.delete("/:post_id", isLoggedIn, boardsController.deletePost);
 

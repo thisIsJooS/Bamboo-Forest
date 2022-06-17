@@ -7,6 +7,7 @@
     </div>
     <div class="card-body">
       <div class="table-responsive">
+        {# form으로 안보내져서 axios 쓰고있음  #}
         <form action="/boards/{{post.id}}" method="POST" enctype="multipart/form-data">
           <div class="form-group">
             <input type="text" name="title" class="form-control form-control-user" id="title" value="{{post.title}}">
@@ -28,7 +29,7 @@
             </div>
             <div>
               <label id="img-label" for="img">사진 업로드</label>
-              <input id="img" name="img" class="btn" type="file" accept="image/*"/>
+              <input id="img" name="image" type="file" accept="image/*"/>
             </div>
           </div>
 
@@ -52,11 +53,14 @@
           console.log(this, this.files);
           formData.append("img", this.files[0]);
           axios
-            .post("/boards/img", formData)
+            .post("/boards/pre-img", formData)
             .then((res) => {
               document
                 .querySelector("#img-url")
-                .value = res.data.url;
+                .value = res
+                .data
+                .url
+                .replace('pre-', '');
               document
                 .querySelector("#img-preview")
                 .src = res.data.url;
@@ -74,18 +78,13 @@
     document
       .querySelector('#submit')
       .addEventListener('click', function (e) {
+        const formData = new FormData();
+        formData.append('title', document.querySelector('#title').value);
+        formData.append('content', document.querySelector('#content-post').value);
+        formData.append('img_url', document.querySelector('#img-url').value);
+        formData.append('image', document.querySelector('#img').files[0]);
         axios
-          .put('/boards/{{post.id}}', {
-            title: document
-              .querySelector('#title')
-              .value,
-            content: document
-              .querySelector('#content-post')
-              .value,
-            img_url: document
-              .querySelector('#img-url')
-              .value
-          })
+          .put('/boards/{{post.id}}', formData)
           .then((res) => {
             window.location.href = res.data.redirect;
           })
