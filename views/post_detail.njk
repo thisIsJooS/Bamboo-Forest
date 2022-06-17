@@ -17,17 +17,13 @@
       </a>
     {% endif %}
     <br/>
-    <hr/>
+    <hr>
     {% if post_detail.img %}
       <img class="image" src="{{post_detail.img}}" alt="이미지"/>
     {% endif %}
+    <pre>{{ post_detail.content }}</pre>
     <br/>
-    <br/>
-    <p>
-      {{ post_detail.content }}
-    </p>
-    <br/>
-    <hr/>
+    <hr>
   </div>
 
   <!-- 댓글 목록 공간 -->
@@ -39,7 +35,11 @@
     {% for comment in comments %}
       <div id="comment-{{comment.id}}" class="comment">
         {% if boardType == 'anonymous' %}
-          <span class="badge rounded-pill bg-light">익명</span>
+          {% if post_detail.UserId == comment.UserId %}
+            <span class="badge rounded-pill bg-light">글쓴이</span>
+          {% else %}
+            <span class="badge rounded-pill bg-light">익명</span>
+          {% endif %}
         {% else %}
           <span class="badge rounded-pill bg-light">{{ comment.author }}</span>
         {% endif %}
@@ -172,7 +172,9 @@
         .addEventListener('click', function (e) {
           axios
             .delete('/boards/{{post_detail.id}}')
-            .then(window.location = `/boards/{{boardType}}`)
+            .then((res) => {
+              window.location = `/boards/{{boardType}}`
+            })
             .catch(console.error)
           });
     }
