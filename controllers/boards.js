@@ -199,9 +199,8 @@ exports.updatePost = async function (req, res, next) {
   try {
     const post = await Post.findOne({ where: { id: post_id } });
     if (req.user?.id !== post.UserId) {
-      return res.write(
-        "<script>alert('not valid access');window.location='/';</script>"
-      );
+      const message = encodeURIComponent("유효하지 않은 접근입니다.");
+      return res.redirect(`/?error=${message}`);
     }
 
     const currentBoard = await Board.findOne({ where: { id: post.BoardId } });
@@ -239,9 +238,8 @@ exports.deletePost = async function (req, res, next) {
   try {
     const post = await Post.findOne({ where: { id: post_id } });
     if (req.user?.id !== post.UserId) {
-      return res.write(
-        "<script>alert('not valid access');window.location='/';</script>"
-      );
+      const message = encodeURIComponent("유효하지 않은 접근입니다.");
+      return res.redirect(`/?error=${message}`);
     }
 
     await Post.destroy({ where: { id: post_id, UserId: req.user?.id } });
@@ -298,9 +296,8 @@ exports.deleteComment = async function (req, res, next) {
   try {
     const comment = await Comment.findOne({ where: { id: comment_id } });
     if (comment.UserId !== req.user?.id) {
-      return res.write(
-        "<script>alert('not valid access');window.location='/';</script>"
-      );
+      const message = encodeURIComponent("유효하지 않은 접근입니다.");
+      return res.redirect(`/?error=${message}`);
     }
 
     await Comment.destroy({ where: { id: comment_id, PostId: post_id } });

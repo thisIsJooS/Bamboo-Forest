@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
   <head>
 
@@ -222,6 +222,13 @@
     <script src="/js/demo/chart-pie-demo.js"></script>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      window.onload = () => {
+        if ('{{error_message}}') {
+          alert('{{error_message}}');
+        }
+      }
+    </script>
 
     {% block script %}{% endblock %}
   </body>

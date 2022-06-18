@@ -15,6 +15,20 @@ router.post("/login", isNotLoggedIn, authController.login);
 
 router.get("/logout", isLoggedIn, authController.logout);
 
+router.get("/forgot-password", isNotLoggedIn, authController.forgotPassword);
+
+router.post("/valid-id", isNotLoggedIn, authController.isValidID);
+
+router.post("/send-reset-mail", isNotLoggedIn, authController.sendResetMail);
+
+router.get(
+  "/reset-password",
+  isNotLoggedIn,
+  authController.getResetPasswordPage
+);
+
+router.post("/reset-password", isNotLoggedIn, authController.resetPassword);
+
 // router.get("/kakao", passport.authenticate("kakao"));
 
 // router.get(

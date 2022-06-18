@@ -88,7 +88,6 @@
     }
 
     if (document.querySelector('#submit')) {
-
       document
         .querySelector('#submit')
         .addEventListener('click', function (e) {
@@ -107,9 +106,16 @@
               author_span
                 .classList
                 .add('badge', 'rounded-pill', 'bg-light');
-              author_span.textContent = `{{boardType}}` === 'anonymous'
-                ? '익명'
-                : res.data.comment_author;
+              if (`{{boardType}}` === 'anonymous') {
+                if (res.data.comment.UserId === {{post_detail.UserId}}) {
+                  author_span.textContent = '글쓴이';
+                } else {
+                  author_span.textContent = '익명'
+                }
+              } else {
+                author_span.textContent = res.data.comment_author;
+              }
+
               div.appendChild(author_span);
 
               const date_span = document.createElement('span');

@@ -24,7 +24,7 @@ router.use((req, res, next) => {
 });
 
 router.get("/", (req, res, next) => {
-  res.render("home");
+  res.render("home", { error_message: req.query?.error });
 });
 
 module.exports = router;

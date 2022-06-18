@@ -38,20 +38,23 @@
                 <form class="user" method="POST" action="/auth/signup">
                   <div class="form-group row"></div>
                   <div class="form-group">
-                    <input type="text" name="username" class="form-control form-control-user" id="exampleInputEmail" placeholder="Enter Your Nickname">
+                    <input type="text" name="username" class="form-control form-control-user" id="InputID" placeholder="Enter Your ID">
                   </div>
                   <div class="form-group row">
                     <div class="col-sm-6 mb-3 mb-sm-0">
-                      <input type="password" name="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                      <input type="password" name="password" class="form-control form-control-user" id="InputPassword" placeholder="Password">
                     </div>
                     <div class="col-sm-6">
-                      <input type="password" name="repeat" class="form-control form-control-user" id="exampleRepeatPassword" placeholder="Repeat Password">
+                      <input type="password" name="repeat" class="form-control form-control-user" id="RepeatPassword" placeholder="Repeat Password">
                     </div>
+                  </div>
+                  <div class="form-group">
+                    <input type="email" name="useremail" class="form-control form-control-user" id="InputEmail" placeholder="Email Address">
                   </div>
                   {% if error_message %}
                     <p class="form-group text-center">{{error_message}}</p>
                   {% endif %}
-                  <input type="submit" class="btn btn-success btn-user btn-block" value="회원가입" id="submit" disabled>
+                  <input type="submit" class="btn btn-success btn-user btn-block" value="회원가입" id="submit" disabled readonly>
 
                   <hr>
                   <a href="login" class="btn btn-google btn-user btn-block">
@@ -67,6 +70,9 @@
                 <hr>
                 <div class="text-center">
                   <a class="small" href="login">Already have an account? Login!</a>
+                </div>
+                <div class="text-center">
+                  <a class="small" href="/">&larr; Back to Dashboard</a>
                 </div>
               </div>
             </div>
@@ -86,27 +92,24 @@
     <!-- Custom scripts for all pages-->
     <script src="/js/sb-admin-2.min.js "></script>
     <script>
-      const password = document.querySelector('#exampleInputPassword');
-      const repeat = document.querySelector('#exampleRepeatPassword');
+      const password = document.querySelector('#InputPassword');
+      const repeat = document.querySelector('#RepeatPassword');
+      const email = document.querySelector('#InputEmail');
       const submit = document.querySelector('#submit');
+      const emailReg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 
-      password.addEventListener('input', function (e) {
-        if (password.value && repeat.value && password.value === repeat.value) {
+      const myAddEventListener = addEventListener('input', function (e) {
+        if (password.value && repeat.value && password.value === repeat.value && emailReg.test(email.value)) {
           submit.disabled = false;
         } else {
           submit.disabled = true;
         }
       })
 
-      repeat.addEventListener('input', function (e) {
-        if (password.value && repeat.value && password.value === repeat.value) {
-          submit.disabled = false;
-        } else {
-          submit.disabled = true;
-        }
-      })
-    </script
+      const inputs = [password, repeat, email];
+      inputs.forEach(input => input.myAddEventListener);
+    </script>
 
   </body>
 
-  </html>
+</html>
