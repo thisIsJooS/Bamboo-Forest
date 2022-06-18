@@ -74,7 +74,7 @@ exports.login = function (req, res, next) {
   })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 };
 
-exports.logout = function (req, res, next) {
+exports.logout = async function (req, res, next) {
   req.logout(function (err) {
     if (err) {
       return next(err);
