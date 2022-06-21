@@ -30,6 +30,8 @@
     "nodemailer": "^6.7.5",
     "nunjucks": "^3.2.3",
     "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-google-oidc": "^0.1.0",
     "passport-local": "^1.0.0",
     "sequelize": "^6.20.1",
     "sequelize-cli": "^6.4.1"

@@ -74,6 +74,20 @@ exports.login = function (req, res, next) {
   })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
 };
 
+exports.googleLogin = function (req, res, next) {
+  passport.authenticate("google", {
+    scope: ["email", "openid", "profile"],
+  })(req, res, next);
+};
+
+exports.googleCallback = function (req, res, next) {
+  passport.authenticate("google", {
+    failureRedirect: "/auth/login",
+    failureMessage: true,
+    successRedirect: "/",
+  })(req, res, next);
+};
+
 exports.logout = async function (req, res, next) {
   req.logout(function (err) {
     if (err) {
@@ -125,7 +139,7 @@ exports.sendResetMail = async function (req, res, next) {
     const emailParam = {
       toEmail: userEmail,
       subject: "비밀번호 초기화 이메일입니다.",
-      text: `비밀번호 초기화를 위해서는 아래의 URL을 클릭하여 주세요. http://127.0.0.1:8001/auth/reset-password?token=${authenticatedToken.token}`,
+      text: `비밀번호 초기화를 위해서는 아래의 URL을 클릭하여 주세요. ${process.env.DOMAIN}/auth/reset-password?token=${authenticatedToken.token}`,
     };
 
     mailer.sendGmail(emailParam, next);

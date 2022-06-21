@@ -11,6 +11,10 @@ router.post("/signup", isNotLoggedIn, authController.signup);
 
 router.get("/login", isNotLoggedIn, authController.getLoginPage);
 
+router.get("/login/google", isNotLoggedIn, authController.googleLogin);
+
+router.get("/callback/google", authController.googleCallback);
+
 router.post("/login", isNotLoggedIn, authController.login);
 
 router.get("/logout", isLoggedIn, authController.logout);
@@ -28,17 +32,5 @@ router.get(
 );
 
 router.post("/reset-password", isNotLoggedIn, authController.resetPassword);
-
-// router.get("/kakao", passport.authenticate("kakao"));
-
-// router.get(
-//   "/kakao/callback",
-//   passport.authenticate("kakao", {
-//     failureRedirect: "/",
-//   }),
-//   (req, res) => {
-//     res.redirect("/");
-//   }
-// );
 
 module.exports = router;

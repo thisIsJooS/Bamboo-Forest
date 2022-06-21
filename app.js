@@ -22,7 +22,7 @@ const passportConfig = require("./passport");
 const app = express();
 passportConfig();
 checkToken();
-app.set("port", process.env.PORT || 8001);
+app.set("port", process.env.PORT || 8000);
 app.set("view engine", "njk");
 nunjucks.configure("views", {
   express: app,
@@ -53,6 +53,7 @@ const sessionOption = {
   cookie: {
     httpOnly: true,
     secure: false,
+    maxAge: 60 * 60 * 1000,
   },
 };
 
