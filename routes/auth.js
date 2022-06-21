@@ -33,4 +33,6 @@ router.get(
 
 router.post("/reset-password", isNotLoggedIn, authController.resetPassword);
 
+router.get("/withdrawal", isLoggedIn, authController.withdrawAccount);
+
 module.exports = router;

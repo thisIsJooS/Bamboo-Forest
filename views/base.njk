@@ -136,6 +136,10 @@
                       <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                       Logout
                     </a>
+                    <a class="dropdown-item" href="/auth/withdrawal" data-toggle="modal" data-target="#withdrawalModal">
+                      <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                      Account Withdrawak
+                    </a>
                   {% else %}
                     <a class="dropdown-item" href="/auth/login">
                       <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -199,6 +203,24 @@
           <div class="modal-body">아래 로그아웃 버튼을 눌러주세요.</div>
           <div class="modal-footer">
             <a class="btn btn-success" href="/auth/logout">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Withdrawal Modal-->
+    <div class="modal fade" id="withdrawalModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">정말로 회원탈퇴 하시겠어요?</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">아래 회원탈퇴 버튼을 눌러주세요.</div>
+          <div class="modal-footer">
+            <a class="btn btn-success" href="/auth/withdrawal">Withdrawal</a>
           </div>
         </div>
       </div>

@@ -187,3 +187,14 @@ exports.resetPassword = async function (req, res, next) {
     next(error);
   }
 };
+
+exports.withdrawAccount = async function (req, res, next) {
+  try {
+    await User.destroy({ where: { id: req.user.id } });
+
+    res.redirect("/");
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
