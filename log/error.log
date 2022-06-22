@@ -1,0 +1,15 @@
+2022-06-22T04:27:29.718Z [right meow!] error: GET /as 라우터가 없습니다.
+2022-06-22T04:31:18.285Z [right meow!] error: GET /as 라우터가 없습니다.
+2022-06-22T04:34:19.933Z [right meow!] error: GET /as 라우터가 없습니다.
+2022-06-22T04:34:53.650Z [right meow!] error: GET /as 라우터가 없습니다. ::ffff:127.0.0.1
+2022-06-22T04:35:57.519Z [right meow!] error: GET /as 라우터가 없습니다. - ::ffff:127.0.0.1 - undefined 
+2022-06-22T04:36:26.278Z [right meow!] error: GET /asd 라우터가 없습니다. - ::ffff:127.0.0.1 - [object SequelizeInstance:User] 
+2022-06-22T04:36:49.614Z [right meow!] error: GET /asd 라우터가 없습니다. - ::ffff:127.0.0.1 - 주승우 
+2022-06-22T04:39:16.485Z [right meow!] error: GET /asd 라우터가 없습니다. - ::ffff:127.0.0.1 - 주승우 
+2022-06-22T04:39:29.612Z [right meow!] error: GET /asd 라우터가 없습니다. - ::ffff:127.0.0.1 - 주승우 
+2022-06-22T04:39:31.878Z [right meow!] error: GET /asd 라우터가 없습니다. - ::ffff:127.0.0.1 - 주승우 
+2022-06-22T04:39:33.014Z [right meow!] error: GET /asd 라우터가 없습니다. - ::ffff:127.0.0.1 - 주승우 
+2022-06-22T04:39:33.744Z [right meow!] error: GET /asd 라우터가 없습니다. - ::ffff:127.0.0.1 - 주승우 
+2022-06-22T04:39:34.597Z [right meow!] error: GET /asd 라우터가 없습니다. - ::ffff:127.0.0.1 - 주승우 
+2022-06-22T04:40:08.604Z [right meow!] error: GET /ads 라우터가 없습니다. - /ads - GET - ::ffff:127.0.0.1 - undefined 
+2022-06-22T04:40:10.426Z [right meow!] error: GET /ads 라우터가 없습니다. - /ads - GET - ::ffff:127.0.0.1 - undefined 

@@ -17,6 +17,7 @@ const boardsRouter = require("./routes/boards");
 const authRouter = require("./routes/auth");
 const adminRouter = require("./routes/admin");
 const fs = require("fs");
+const logger = require("./logger/logger");
 
 const { sequelize } = require("./models");
 const passportConfig = require("./passport");
@@ -77,12 +78,21 @@ app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
 
 app.use((req, res, next) => {
-  console.error(`${req.method} ${req.url} 라우터가 없습니다.`);
+  const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
+  error.status = 404;
+  logger.info("404 Not found");
+  logger.error(
+    `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip} - ${req.user?.name} `
+  );
   res.status(404).render("404");
 });
 
 app.use((error, req, res, next) => {
   console.error(error);
+  logger.ingo("500 Internal Server Error");
+  logger.error(
+    `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip} - ${req.user?.name} `
+  );
   res.status(500).render("500");
 });
 
