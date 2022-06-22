@@ -9,6 +9,7 @@ const passport = require("passport");
 const helmet = require("helmet");
 const hpp = require("hpp");
 const checkToken = require("./middlewares/checkToken");
+const rateLimit = require("./middlewares/rate-limiter");
 
 dotenv.config();
 const indexRouter = require("./routes/index");
@@ -58,6 +59,7 @@ const sessionOption = {
 };
 
 app.use(morgan("dev"));
+app.use(rateLimit);
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/pre-img", express.static(path.join(__dirname, "pre-uploads")));
 app.use("/img", express.static(path.join(__dirname, "uploads")));
