@@ -15,7 +15,7 @@ const paginate = require("express-paginate");
 
 dotenv.config();
 const indexRouter = require("./routes/index");
-const boardsRouter = require("./routes/boards");
+const boardRouter = require("./routes/boards");
 const authRouter = require("./routes/auth");
 const adminRouter = require("./routes/admin");
 const fs = require("fs");
@@ -86,7 +86,7 @@ app.use(passport.session());
 app.use(paginate.middleware(10, 50));
 
 app.use("/", indexRouter);
-app.use("/boards", boardsRouter);
+app.use("/board", boardRouter);
 app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
 

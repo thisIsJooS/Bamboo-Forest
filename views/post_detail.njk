@@ -1,4 +1,5 @@
 {% extends 'base.njk' %}
+
 {% block content %}
   <div>
     <h2 class="alert alert-primary">{{ post_detail.title }}</h2>
@@ -10,35 +11,31 @@
     {% endif %}
     <span class="badge rounded-pill bg-light">{{ post_detail.createdAt}}</span>
     {% if post_detail.UserId == user.id %}
-      <a
-    class="badge rounded-pill bg-light"
-    href="/boards/updatePage/{{post_detail.id}}"
-    >수정</a
-  >
-      <a class="badge rounded-pill bg-light">
-        <span id="delete-post" style="cursor: pointer">삭제</span>
+      <a class="badge rounded-pill bg-light" href="/boards/updatePage/{{post_detail.id}}">수정</a>
+      <a class="badge rounded-pill bg-light" >
+        <span id="delete-post" style="cursor: pointer;">삭제</span>
       </a>
     {% endif %}
     <br/>
-    <hr/>
+    <hr>
     {% if post_detail.img %}
       <img class="image" src="{{post_detail.img}}" alt="이미지"/>
     {% endif %}
     <pre>{{ post_detail.content }}</pre>
     <br/>
-    <hr/>
+    <hr>
   </div>
 
   <!-- 댓글 목록 공간 -->
   <section id="commentBox">
     <h5>
-      <span id="comments-count">{{comments.length}}</span>개의 댓글</h5>
-    <hr/>
+      <span id="comments-count">{{comments.length}}</span>개의 댓글
+    </h5>
+    <hr>
     {% for comment in comments %}
       <div id="comment-{{comment.id}}" class="comment">
         {% if boardType == 'anonymous' %}
-          {% if post_detail.UserId == comment.UserId
- %}
+          {% if post_detail.UserId == comment.UserId %}
             <span class="badge rounded-pill bg-light">글쓴이</span>
           {% else %}
             <span class="badge rounded-pill bg-light">익명</span>
@@ -48,18 +45,12 @@
         {% endif %}
         <span class="badge rounded-pill bg-light">{{ comment.createdAt }}</span>
         {% if comment.UserId === user.id %}
-          <a class="badge rounded-pill bg-light">
-            <span
-        class="delete-comment"
-        data-postid="{{post_detail.id}}"
-        data-commentid="{{comment.id}}"
-        style="cursor: pointer"
-        >삭제</span
-      >
+          <a class="badge rounded-pill bg-light" >
+            <span class="delete-comment" data-postid="{{post_detail.id}}" data-commentid="{{comment.id}}" style="cursor: pointer;">삭제</span>
           </a>
         {% endif %}
         <p class="rounded-pill bg-light">{{ comment.comment }}</p>
-        <hr/>
+        <hr>
       </div>
     {% endfor %}
   </section>
@@ -67,31 +58,15 @@
   <!-- 댓글 입력 공간 -->
   {% if user %}
     <div class="form-group">
-      <textarea
-    name="comment"
-    id="comment"
-    class="form-control form-control-user"
-    placeholder="댓글을 입력해주세요."
-    rows="3"
-  ></textarea>
+      <textarea  name="comment" id="comment" class="form-control form-control-user" placeholder="댓글을 입력해주세요." rows="3"></textarea>
     </div>
-    <div
-  id="submit"
-  class="btn btn-primary btn-icon-split btn-sm"
-  value="댓글 입력"
->
-  댓글 입력
-</div>
+    <div id="submit" class="btn btn-primary btn-icon-split btn-sm" value="댓글 입력">댓글 입력</div>
   {% else %}
-    <textarea
-  name="comment"
-  id="disabled-comment"
-  class="form-control form-control-user"
-  placeholder="댓글을 작성하려면 로그인 해주세요."
-  rows="2"
-></textarea>
+    <textarea  name="comment" id="disabled-comment" class="form-control form-control-user" placeholder="댓글을 작성하려면 로그인 해주세요." rows="2" ></textarea>
   {% endif %}
+
 {% endblock %}
+
 {% block script %}
   <script>
     function deleteComment(e) {

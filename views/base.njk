@@ -51,23 +51,10 @@
         <hr class="sidebar-divider">
 
         <!-- Heading -->
-        <div class="sidebar-heading">
-          Interface
-        </div>
+        <div class="sidebar-heading">Interface</div>
 
         <!-- Nav Item - Charts -->
-        <li class="nav-item">
-          <a class="nav-link" href="/boards/anonymous">
-            <i class="fas fa-fw fa-chart-area"></i>
-            <span>익명게시판</span></a>
-        </li>
-
-        <!-- Nav Item - Tables -->
-        <li class="nav-item">
-          <a class="nav-link" href="/boards/free">
-            <i class="fas fa-fw fa-table"></i>
-            <span>자유게시판</span></a>
-        </li>
+        <div id="category-box"></div>
 
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
@@ -250,8 +237,42 @@
           alert('{{error_message}}');
         }
       }
-    </script>
 
+      function createLi(board) {
+        const li = document.createElement('li');
+        li.setAttribute('class', 'nav-item');
+
+        const a = document.createElement('a');
+        a.setAttribute('class', 'nav-link');
+        a.setAttribute('href', `/board/lists?id=${board.id}`);
+
+        const i = document.createElement('i');
+        i.setAttribute('class', 'fas fa-fw fa-chart-area');
+
+        const span = document.createElement('span');
+        span.textContent = `${board.boardName_kor}게시판`;
+
+        a.appendChild(i);
+        a.appendChild(span);
+        li.appendChild(a);
+
+        return li;
+      }
+
+      window.onload = () => {
+        axios
+          .post("/board/boards")
+          .then((res) => {
+            const boards = res.data.boards;
+            boards.forEach((board) => {
+              document
+                .querySelector("#category-box")
+                .appendChild(createLi(board));
+            });
+          })
+          .catch(console.error);
+      };
+    </script>
     {% block script %}{% endblock %}
   </body>
 

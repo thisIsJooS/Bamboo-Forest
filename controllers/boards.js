@@ -5,21 +5,36 @@ const fsExtra = require("fs-extra");
 const path = require("path");
 const paginate = require("express-paginate");
 
-exports.getPosts = async function (req, res, next) {
-  const boardType = req.params.boardType;
+// GET /board/boards
+exports.getBoards = async function (req, res, next) {
   try {
+    const boards = await Board.findAll();
+    return res.json({
+      boards,
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+// GET /board/lists?id=#####
+exports.getDocs = async function (req, res, next) {
+  try {
+    const board_id = req.params.id;
+
     await fsExtra.emptyDir(path.join(__dirname, "..", "pre-uploads"), (err) => {
       if (err) {
         console.error(err);
       }
     });
 
-    const currentBoard = await Board.findOne({
-      where: { boardName_eng: boardType },
+    const board = await Board.findOne({
+      where: { id: board_id },
     });
 
-    const posts = await Post.findAndCountAll({
-      where: { BoardId: currentBoard.id },
+    const docs = await Post.findAndCountAll({
+      where: { BoardId: board.id },
       order: [["createdAt", "DESC"]],
       raw: true,
       attributes: {
@@ -50,21 +65,20 @@ exports.getPosts = async function (req, res, next) {
       offset: req.skip,
     });
 
-    const promises = posts.rows.map(async (post) => {
-      const author = await User.findOne({ where: { id: post.UserId } });
-      post.author = author.name;
-      return post;
+    const promises = docs.rows.map(async (doc) => {
+      const author = await User.findOne({ where: { id: doc.UserId } });
+      doc.author = author.name;
+      return doc;
     });
     await Promise.all(promises);
 
-    const postCount = posts.count;
-    const pageCount = Math.ceil(posts.count / req.query.limit);
+    const docCount = docs.count;
+    const pageCount = Math.ceil(docs.count / req.query.limit);
 
     res.render("post_list", {
-      posts: posts.rows,
-      boardName_kor: currentBoard.boardName_kor,
-      boardType,
-      postCount,
+      docs: docs.rows,
+      board,
+      docCount,
       pageCount,
       pages: paginate.getArrayPages(req)(3, pageCount, req.query.page),
     });
@@ -74,36 +88,37 @@ exports.getPosts = async function (req, res, next) {
   }
 };
 
-exports.createPostPage = async function (req, res, next) {
-  const boardType = req.params.boardType;
-
+// GET /board/write?id=######
+exports.createDocPage = async function (req, res, next) {
   try {
+    const board_id = req.params.id;
     const board = await Board.findOne({
-      where: { boardName_eng: boardType },
+      where: { id: board_id },
     });
-    const boardName_kor = board.boardName_kor;
-    res.render("post_form", { boardType, boardName_kor });
+
+    res.render("post_form", { board });
   } catch (error) {
     console.error(error);
     next(error);
   }
 };
 
-exports.createPost = async function (req, res, next) {
-  const boardType = req.params.boardType;
+// POST /board/write?id=#####
+exports.createDoc = async function (req, res, next) {
   try {
-    const currentBoard = await Board.findOne({
-      where: { boardName_eng: boardType },
+    const board_id = req.params.id;
+    const board = await Board.findOne({
+      where: { id: board_id },
     });
-    const post = await Post.create({
+    const new_doc = await Post.create({
       title: req.body.title,
       content: req.body.content,
       img: req.body.img_url,
       UserId: req.user.id,
-      BoardId: currentBoard.id,
+      BoardId: board.id,
     });
 
-    res.redirect(`/boards/${boardType}/detail/${post.id}`);
+    res.redirect(`/boards/view?id=${new_doc.id}`);
   } catch (error) {
     console.error(error);
     next(error);
@@ -114,12 +129,14 @@ exports.preUploadImage = function (req, res, next) {
   res.json({ url: `/pre-img/${req.file.filename}` });
 };
 
-exports.getPostDetail = async function (req, res, next) {
-  const boardType = req.params.boardType;
-  const post_id = req.params.post_id;
+// GET /board/view?id=####&no=####
+exports.viewDoc = async function (req, res, next) {
   try {
-    const post_detail = await Post.findOne({
-      where: { id: post_id },
+    const board_id = req.params.id;
+    const doc_no = req.params.no;
+
+    const doc = await Post.findOne({
+      where: { BoardId: board_id, id: doc_no },
       attributes: {
         include: [
           "id",
@@ -146,8 +163,12 @@ exports.getPostDetail = async function (req, res, next) {
       },
     });
 
+    const board = await Board.findOne({
+      where: { id: board_id },
+    });
+
     const comments = await Comment.findAll({
-      where: { PostId: post_id },
+      where: { PostId: doc.id },
       attributes: {
         include: [
           "id",
@@ -164,7 +185,7 @@ exports.getPostDetail = async function (req, res, next) {
       },
     });
 
-    const author = await User.findOne({ where: { id: post_detail.UserId } });
+    const author = await User.findOne({ where: { id: doc.UserId } });
 
     const promises = comments.map(async (comment) => {
       const commentAuthor = await User.findOne({
@@ -176,8 +197,8 @@ exports.getPostDetail = async function (req, res, next) {
     await Promise.all(promises);
 
     res.render("post_detail", {
-      post_detail,
-      boardType,
+      doc,
+      board,
       author: author.name,
       comments,
     });
@@ -187,32 +208,36 @@ exports.getPostDetail = async function (req, res, next) {
   }
 };
 
-exports.updatePostPage = async function (req, res, next) {
-  const post_id = req.params.post_id;
+// GET /board/modify?id=####&no=####
+exports.modifyDocPage = async function (req, res, next) {
   try {
-    const post = await Post.findOne({ where: { id: post_id } });
+    const board_id = req.params.id;
+    const doc_no = req.params.doc_no;
+
+    const doc = await Post.findOne({ where: { id: doc_no } });
     if (req.user?.id !== post.UserId) {
       return res.write(
         "<script>alert('not valid access');window.location='/';</script>"
       );
     }
-    res.render("post_update", { post });
+    res.render("post_update", { doc });
   } catch (error) {
     console.error(error);
     next(error);
   }
 };
 
-exports.updatePost = async function (req, res, next) {
-  const post_id = req.params.post_id;
+// POST /board/modify?id=####&no=####
+exports.modifyDoc = async function (req, res, next) {
   try {
-    const post = await Post.findOne({ where: { id: post_id } });
+    const board_id = req.params.id;
+    const doc_no = req.params.no;
+
+    const doc = await Post.findOne({ where: { id: doc_no } });
     if (req.user?.id !== post.UserId) {
       const message = encodeURIComponent("유효하지 않은 접근입니다.");
       return res.redirect(`/?error=${message}`);
     }
-
-    const currentBoard = await Board.findOne({ where: { id: post.BoardId } });
 
     await Post.update(
       {
@@ -221,11 +246,11 @@ exports.updatePost = async function (req, res, next) {
         img: req.body.img_url,
       },
       {
-        where: { id: post_id, UserId: req.user?.id },
+        where: { id: doc_no, UserId: req.user?.id, BoardId: board_id },
       }
     );
 
-    if (post.img !== req.body.img_url) {
+    if (doc.img !== req.body.img_url) {
       const imgFileName = post.img.split("/")[2];
       const filePath = path.join(__dirname, "..", "uploads", imgFileName);
       fs.unlink(filePath, (err) => {
@@ -234,7 +259,7 @@ exports.updatePost = async function (req, res, next) {
     }
 
     return res.status(201).json({
-      redirect: `/boards/${currentBoard.boardName_eng}/detail/${post_id}`,
+      redirect: `/board/view?id=${board_id}&no=${doc_no}`,
     });
   } catch (error) {
     console.log(error);
@@ -242,10 +267,15 @@ exports.updatePost = async function (req, res, next) {
   }
 };
 
-exports.deletePost = async function (req, res, next) {
-  const post_id = req.params.post_id;
+// GET /board/delete?id=####&no=####
+exports.deleteDoc = async function (req, res, next) {
   try {
-    const post = await Post.findOne({ where: { id: post_id } });
+    const board_id = req.params.id;
+    const doc_no = req.params.no;
+
+    const doc = await Post.findOne({
+      where: { id: doc_no, BoardId: board_id },
+    });
     if (req.user?.id !== post.UserId) {
       const message = encodeURIComponent("유효하지 않은 접근입니다.");
       return res.redirect(`/?error=${message}`);
@@ -253,7 +283,7 @@ exports.deletePost = async function (req, res, next) {
 
     await Post.destroy({ where: { id: post_id, UserId: req.user?.id } });
 
-    if (post.img) {
+    if (doc.img) {
       const imgFileName = post.img.split("/")[2];
       const filePath = path.join(__dirname, "..", "uploads", imgFileName);
       fs.unlink(filePath, (err) => {
@@ -268,12 +298,12 @@ exports.deletePost = async function (req, res, next) {
   }
 };
 
+// POST /board/forms/comment_submit - req.body includes datas
 exports.createComment = async function (req, res, next) {
-  const post_id = req.params.post_id;
   try {
     const comment = await Comment.create({
       comment: req.body.comment,
-      PostId: post_id,
+      PostId: req.body.doc_no,
       UserId: req.user.id,
     });
 
@@ -299,18 +329,40 @@ function format_date(date) {
   return require("moment")(date).format("YYYY-MM-DD HH:mm:ss");
 }
 
-exports.deleteComment = async function (req, res, next) {
-  const post_id = req.params.post_id;
-  const comment_id = req.params.comment_id;
+// POST /board/comment/comment_update_submit
+exports.modifyComment = async function (req, res, next) {
   try {
-    const comment = await Comment.findOne({ where: { id: comment_id } });
+    const comment = await Comment.update(
+      {
+        comment: req.body.comment,
+      },
+      {
+        where: { id: req.body.commentId, PostId: req.body.doc_no },
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+// GET /board/comment/comment_delete_submit
+exports.deleteComment = async function (req, res, next) {
+  try {
+    const comment = await Comment.findOne({
+      where: { id: req.body.commentId, PostId: req.body.doc_no },
+    });
+
     if (comment.UserId !== req.user?.id) {
       const message = encodeURIComponent("유효하지 않은 접근입니다.");
       return res.redirect(`/?error=${message}`);
     }
 
-    await Comment.destroy({ where: { id: comment_id, PostId: post_id } });
-    return res.json({ comment_id });
+    await Comment.destroy({
+      where: { id: req.body.commentId, PostId: req.body.doc_no },
+    });
+
+    return res.json({ comment_id: comment.id });
   } catch (error) {
     console.error(error);
     next(error);

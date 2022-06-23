@@ -4,10 +4,11 @@ const multer = require("multer");
 const path = require("path");
 
 const { isLoggedIn, isNotLoggedIn } = require("../middlewares/auth");
-const boardsController = require("../controllers/boards");
+const boardController = require("../controllers/boards");
 
 const router = express.Router();
 
+// Image
 const preUpload = multer({
   storage: multer.diskStorage({
     destination(req, file, cb) {
@@ -37,40 +38,61 @@ router.post(
   "/pre-img",
   isLoggedIn,
   preUpload.single("img"),
-  boardsController.preUploadImage
+  boardController.preUploadImage
 );
 
-// board
-router.get("/:boardType", boardsController.getPosts);
+// Board
+// POST /board/boards
+router.post("/boards", boardController.getBoards);
 
-router.get("/:boardType/post", isLoggedIn, boardsController.createPostPage);
+// Docs
+// GET /board/lists?id=#####
+router.get("/lists", boardController.getDocs);
 
+// GET /board/write?id=######
+router.get("/write", isLoggedIn, boardController.createDocPage);
+
+// POST /board/write?id=#####
 router.post(
-  "/:boardType/post",
+  "/write",
   isLoggedIn,
   upload.single("image"),
-  boardsController.createPost
+  boardController.createDoc
 );
 
-router.get("/updatePage/:post_id", isLoggedIn, boardsController.updatePostPage);
+// GET /board/modify?id=####&no=####
+router.get("/modify", isLoggedIn, boardController.modifyDocPage);
 
-router.put(
-  "/:post_id",
+// POST /board/modify?id=####&no=####
+router.post(
+  "/modify",
   isLoggedIn,
   upload.single("image"),
-  boardsController.updatePost
+  boardController.modifyDoc
 );
 
-router.delete("/:post_id", isLoggedIn, boardsController.deletePost);
+// GET /board/delete?id=####&no=####
+router.get("/delete", isLoggedIn, boardController.deleteDoc);
 
-router.get("/:boardType/detail/:post_id", boardsController.getPostDetail);
+// GET /board/view?id=####&no=####
+router.get("/view", boardController.viewDoc);
 
-router.post("/comment/:post_id", isLoggedIn, boardsController.createComment);
+// Comment
+// POST /board/forms/comment_submit
+router.post("/forms/comment_submit", isLoggedIn, boardController.createComment);
 
-router.delete(
-  "/comment/:post_id/:comment_id",
+// POST /board/comment/comment_update_submit
+router.post(
+  "comment/comment_update_submit",
   isLoggedIn,
-  boardsController.deleteComment
+  boardController.modifyComment
+);
+
+// GET /board/comment/comment_delete_submit
+router.get(
+  "/comment/comment_delete_submit",
+  isLoggedIn,
+  boardController.deleteComment
 );
 
 module.exports = router;
