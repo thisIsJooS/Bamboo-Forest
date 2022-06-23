@@ -5,7 +5,7 @@ module.exports = class Post extends Sequelize.Model {
     return super.init(
       {
         title: {
-          type: Sequelize.STRING(50),
+          type: Sequelize.STRING(100),
           allowNull: false,
         },
         content: {

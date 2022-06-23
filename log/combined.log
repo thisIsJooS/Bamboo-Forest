@@ -28,3 +28,7 @@
 2022-06-22T04:40:08.604Z [right meow!] error: GET /ads 라우터가 없습니다. - /ads - GET - ::ffff:127.0.0.1 - undefined 
 2022-06-22T04:40:10.425Z [right meow!] info: 404 Not found
 2022-06-22T04:40:10.426Z [right meow!] error: GET /ads 라우터가 없습니다. - /ads - GET - ::ffff:127.0.0.1 - undefined 
+2022-06-22T05:14:34.649Z [right meow!] info: 500 Internal Server Error
+2022-06-22T05:14:34.650Z [right meow!] error: Data too long for column 'name' at row 1 - /auth/signup - POST - ::ffff:127.0.0.1 - undefined 
+2022-06-22T05:15:00.286Z [right meow!] info: 500 Internal Server Error
+2022-06-22T05:15:00.287Z [right meow!] error: Data too long for column 'title' at row 1 - /boards/free/post - POST - ::ffff:127.0.0.1 - 주승우 

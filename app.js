@@ -10,6 +10,7 @@ const helmet = require("helmet");
 const hpp = require("hpp");
 const checkToken = require("./middlewares/checkToken");
 const rateLimit = require("./middlewares/rate-limiter");
+const cors = require("cors");
 
 dotenv.config();
 const indexRouter = require("./routes/index");
@@ -18,6 +19,8 @@ const authRouter = require("./routes/auth");
 const adminRouter = require("./routes/admin");
 const fs = require("fs");
 const logger = require("./logger/logger");
+const csurf = require("csurf");
+const csrfProtection = csurf({ cookie: true });
 
 const { sequelize } = require("./models");
 const passportConfig = require("./passport");
@@ -59,7 +62,14 @@ const sessionOption = {
   },
 };
 
+const corsOption = {
+  origin: process.env.CORS_ALLOW_ORIGIN,
+  optionSuccessStatus: 200, // 200 으로 자동응답
+  credentials: true, // Access-Control-Allow-Credentials: true
+};
+
 app.use(morgan("dev"));
+app.use(cors(corsOption));
 app.use(rateLimit);
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/pre-img", express.static(path.join(__dirname, "pre-uploads")));
@@ -89,7 +99,7 @@ app.use((req, res, next) => {
 
 app.use((error, req, res, next) => {
   console.error(error);
-  logger.ingo("500 Internal Server Error");
+  logger.info("500 Internal Server Error");
   logger.error(
     `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip} - ${req.user?.name} `
   );
