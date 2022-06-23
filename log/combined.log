@@ -32,3 +32,7 @@
 2022-06-22T05:14:34.650Z [right meow!] error: Data too long for column 'name' at row 1 - /auth/signup - POST - ::ffff:127.0.0.1 - undefined 
 2022-06-22T05:15:00.286Z [right meow!] info: 500 Internal Server Error
 2022-06-22T05:15:00.287Z [right meow!] error: Data too long for column 'title' at row 1 - /boards/free/post - POST - ::ffff:127.0.0.1 - 주승우 
+2022-06-23T09:45:57.559Z [right meow!] info: 500 Internal Server Error
+2022-06-23T09:45:57.561Z [right meow!] error: posts.map is not a function - /boards/free - GET - ::ffff:127.0.0.1 - undefined 
+2022-06-23T09:46:00.065Z [right meow!] info: 500 Internal Server Error
+2022-06-23T09:46:00.066Z [right meow!] error: posts.map is not a function - /boards/free - GET - ::ffff:127.0.0.1 - undefined 

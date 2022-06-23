@@ -18,6 +18,14 @@ try {
   fs.mkdirSync("pre-uploads");
 }
 
+router.all(function (req, res, next) {
+  // set default or minimum is 10 (as it was prior to v0.2.0)
+  if (!req.quert.limit || req.query.limit <= 10) {
+    req.query.limit = 10;
+  }
+  next();
+});
+
 router.use((req, res, next) => {
   res.locals.user = req.user;
   next();

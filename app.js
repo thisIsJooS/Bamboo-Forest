@@ -11,6 +11,7 @@ const hpp = require("hpp");
 const checkToken = require("./middlewares/checkToken");
 const rateLimit = require("./middlewares/rate-limiter");
 const cors = require("cors");
+const paginate = require("express-paginate");
 
 dotenv.config();
 const indexRouter = require("./routes/index");
@@ -81,6 +82,8 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session(sessionOption));
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(paginate.middleware(10, 50));
 
 app.use("/", indexRouter);
 app.use("/boards", boardsRouter);

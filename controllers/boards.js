@@ -3,6 +3,7 @@ const { Post, Board, User, Comment } = require("../models");
 const fs = require("fs");
 const fsExtra = require("fs-extra");
 const path = require("path");
+const paginate = require("express-paginate");
 
 exports.getPosts = async function (req, res, next) {
   const boardType = req.params.boardType;
@@ -17,7 +18,7 @@ exports.getPosts = async function (req, res, next) {
       where: { boardName_eng: boardType },
     });
 
-    const posts = await Post.findAll({
+    const posts = await Post.findAndCountAll({
       where: { BoardId: currentBoard.id },
       order: [["createdAt", "DESC"]],
       raw: true,
@@ -45,19 +46,27 @@ exports.getPosts = async function (req, res, next) {
           ],
         ],
       },
+      limit: req.query.limit,
+      offset: req.skip,
     });
 
-    const promises = posts.map(async (post) => {
+    const promises = posts.rows.map(async (post) => {
       const author = await User.findOne({ where: { id: post.UserId } });
       post.author = author.name;
       return post;
     });
     await Promise.all(promises);
 
+    const postCount = posts.count;
+    const pageCount = Math.ceil(posts.count / req.query.limit);
+
     res.render("post_list", {
-      posts,
+      posts: posts.rows,
       boardName_kor: currentBoard.boardName_kor,
       boardType,
+      postCount,
+      pageCount,
+      pages: paginate.getArrayPages(req)(3, pageCount, req.query.page),
     });
   } catch (error) {
     console.error(error);

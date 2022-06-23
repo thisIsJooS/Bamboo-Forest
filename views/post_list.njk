@@ -8,10 +8,15 @@
     </div>
     <div class="card-body">
       <div class="table-responsive">
-        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <table
+        class="table table-bordered"
+        id="dataTable"
+        width="100%"
+        cellspacing="0"
+      >
           <thead>
             <tr>
-              <th width='60%'>글 제목</th>
+              <th width="60%">글 제목</th>
               <th>작성 날짜</th>
               <th>작성자</th>
             </tr>
@@ -36,6 +41,35 @@
       </div>
     </div>
   </div>
+
+  <!-- Pagination -->
+  <ul class="pagination">
+    <li class="page-item">
+      <a href="?page=1" class="page-link">First</a>
+    </li>
+    {% if paginate.hasPreviousPages %}
+      <li class="page-item">
+        <a href="{{paginate.href(true)}}" class="page-link">Previous</a>
+      </li>
+    {% endif %}
+    {% if pages %}
+      {% for page in pages %}
+        <li class="page-item">
+          <a href="{{page.url}}" class="page-link">{{page.number}}</a>
+        </li>
+      {% endfor %}
+    {% endif %}
+
+    {% if paginate.hasNextPages(pageCount) %}
+      <li class="page-item">
+        <a href="{{paginate.href()}}" class="page-link">Next</a>
+      </li>
+    {% endif %}
+    <li class="page-item">
+      <a href="?page={{pageCount}}" class="page-link">Last</a>
+    </li>
+  </ul>
+
   {% if user %}
     <a href="/boards/{{boardType}}/post" class="btn btn-success btn-icon-split">
       <span class="icon text-white-50">
@@ -44,22 +78,4 @@
       <span class="text">글쓰기</span>
     </a>
   {% endif %}
-
-  <!-- Pagination -->
-  {% if posts.has_previous %}
-    <a href="?page=1">첫 페이지</a>
-    <a href="?page={{posts.previous_page_number}}">이전 페이지</a>
-  {% endif %}
-
-  <span>{{posts.number}}</span>
-  <span>
-    /
-  </span>
-  <span>{{posts.paginator.num_pages}}</span>
-
-  {% if posts.has_next %}
-    <a href="?page={{posts.next_page_number}}">다음 페이지</a>
-    <a href="?page={{posts.paginator.num_pages}}">마지막 페이지</a>
-  {% endif %}
-
 {% endblock %}

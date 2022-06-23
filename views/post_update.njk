@@ -7,23 +7,57 @@
     </div>
     <div class="card-body">
       <div class="table-responsive">
-        {# form으로 안보내져서 axios 쓰고있음  #}
-        <form action="/boards/{{post.id}}" method="POST" enctype="multipart/form-data">
+        {# form으로 안보내져서 axios 쓰고있음 #}
+        <form
+        action="/boards/{{post.id}}"
+        method="POST"
+        enctype="multipart/form-data"
+      >
           <div class="form-group">
-            <input type="text" name="title" class="form-control form-control-user" id="title" value="{{post.title}}">
+            <input
+            type="text"
+            name="title"
+            class="form-control form-control-user"
+            id="title"
+            value="{{post.title}}"
+/>
           </div>
           <div class="form-group">
-            <textarea name="content" class="form-control form-control-user" id="content-post" rows="15">{{post.content}}</textarea>
+            <textarea
+            name="content"
+            class="form-control form-control-user"
+            id="content-post"
+            rows="15"
+          >
+              {{post.content}}</textarea
+          >
           </div>
           <br/>
 
           <div class="form-group">
             <div class="img-preview">
               {% if post.img %}
-                <img id="img-preview" src="{{post.img}}" style="display: inline" width="250" alt="미리보기"/>
-                <input id="img-url" type="hidden" name="img_url" value="{{post.img}}"/>
+                <img
+              id="img-preview"
+              src="{{post.img}}"
+              style="display: inline"
+              width="250"
+              alt="미리보기"
+/>
+                <input
+              id="img-url"
+              type="hidden"
+              name="img_url"
+              value="{{post.img}}"
+/>
               {% else %}
-                <img id="img-preview" src="" style="display: none" width="250" alt="미리보기"/>
+                <img
+              id="img-preview"
+              src=""
+              style="display: none"
+              width="250"
+              alt="미리보기"
+/>
                 <input id="img-url" type="hidden" name="img_url"/>
               {% endif %}
             </div>
@@ -34,15 +68,19 @@
           </div>
 
           {# 왜 form 으로 update 요청이 안가는지 모르겠음... #}
-          {# <input type="submit" class="btn btn-success btn-icon-split" value="update"> #}
-          <div id="submit" class="btn btn-success btn-icon-split" >수정</div>
+          {#
+        <input
+          type="submit"
+          class="btn btn-success btn-icon-split"
+          value="update"
+        />
+        #}
+          <div id="submit" class="btn btn-success btn-icon-split">수정</div>
         </form>
-
       </div>
     </div>
   </div>
 {% endblock %}
-
 {% block script %}
   <script>
     if (document.querySelector("#img")) {
@@ -60,7 +98,7 @@
                 .value = res
                 .data
                 .url
-                .replace('pre-', '');
+                .replace("pre-", "");
               document
                 .querySelector("#img-preview")
                 .src = res.data.url;
@@ -76,19 +114,19 @@
     }
 
     document
-      .querySelector('#submit')
-      .addEventListener('click', function (e) {
+      .querySelector("#submit")
+      .addEventListener("click", function (e) {
         const formData = new FormData();
-        formData.append('title', document.querySelector('#title').value);
-        formData.append('content', document.querySelector('#content-post').value);
-        formData.append('img_url', document.querySelector('#img-url').value);
-        formData.append('image', document.querySelector('#img').files[0]);
+        formData.append("title", document.querySelector("#title").value);
+        formData.append("content", document.querySelector("#content-post").value);
+        formData.append("img_url", document.querySelector("#img-url").value);
+        formData.append("image", document.querySelector("#img").files[0]);
         axios
-          .put('/boards/{{post.id}}', formData)
+          .put("/boards/{{post.id}}", formData)
           .then((res) => {
             window.location.href = res.data.redirect;
           })
-          .catch(console.error)
-        })
+          .catch(console.error);
+      });
   </script>
 {% endblock %}
