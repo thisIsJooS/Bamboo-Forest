@@ -1,0 +1,30 @@
+2022-06-24T04:49:30.403Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/lists?id=1 - GET - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T04:50:26.873Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/lists?id=2 - GET - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T04:50:27.963Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/lists?id=1 - GET - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T04:51:17.006Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/lists?id=1 - GET - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T04:51:44.488Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/lists?id=1 - GET - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T04:54:02.828Z [right meow!] error: post is not defined - /board/delete?id=2&no=25 - GET - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T04:55:35.681Z [right meow!] error: post is not defined - /board/delete?id=2&no=25 - GET - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T04:56:05.337Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/modify?id=2&no=22 - GET - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T15:15:55.282Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/modify?id=2&no=21 - GET - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T15:21:55.735Z [right meow!] error: post is not defined - /board/modify?id=2&no=23 - GET - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T15:22:35.154Z [right meow!] error: post is not defined - /board/modify?id=2&no=23 - POST - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T15:22:37.720Z [right meow!] error: post is not defined - /board/modify?id=2&no=23 - POST - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T15:55:50.014Z [right meow!] error: POST /boards/comment/comment_submit 라우터가 없습니다. - /boards/comment/comment_submit - POST - ::ffff:127.0.0.1 - 1avn 
+2022-06-24T15:55:52.039Z [right meow!] error: POST /boards/comment/comment_submit 라우터가 없습니다. - /boards/comment/comment_submit - POST - ::ffff:127.0.0.1 - 1avn 
+2022-06-24T15:56:29.479Z [right meow!] error: POST /boards/comment/comment_submit 라우터가 없습니다. - /boards/comment/comment_submit - POST - ::ffff:127.0.0.1 - 1avn 
+2022-06-24T15:57:50.515Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/view?id=2 - GET - ::ffff:127.0.0.1 - 1avn 
+2022-06-24T15:59:19.774Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/view?id=2 - GET - ::ffff:127.0.0.1 - 1avn 
+2022-06-24T16:07:33.471Z [right meow!] error: Cannot read properties of null (reading 'id') - /board/view?id=2&no= - GET - ::ffff:127.0.0.1 - 1avn 
+2022-06-24T16:08:48.595Z [right meow!] error: Cannot read properties of null (reading 'id') - /board/view?id=2&no=undefined - GET - ::ffff:127.0.0.1 - 1avn 
+2022-06-24T16:28:09.370Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/view?id=2 - GET - ::ffff:127.0.0.1 - 1avn 
+2022-06-24T16:28:35.417Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/view?id=1 - GET - ::ffff:127.0.0.1 - 1avn 
+2022-06-24T16:30:17.165Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/view?id=2 - GET - ::ffff:127.0.0.1 - 1avn 
+2022-06-24T17:03:59.623Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/view?id=1 - GET - ::ffff:127.0.0.1 - 1avn 
+2022-06-24T17:08:40.241Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/view?id=2 - GET - ::ffff:127.0.0.1 - 1avn 
+2022-06-24T17:11:22.640Z [right meow!] error: DELETE /board/comment/comment_delete_submit 라우터가 없습니다. - /board/comment/comment_delete_submit - DELETE - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T17:11:41.437Z [right meow!] error: POST /board/comment/comment_delete_submit 라우터가 없습니다. - /board/comment/comment_delete_submit - POST - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T17:12:41.156Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/comment/comment_delete_submit - GET - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T17:13:26.407Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/comment/comment_delete_submit - POST - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T17:15:01.240Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/view?id=26 - GET - ::ffff:127.0.0.1 - 주승우 
+2022-06-24T17:19:26.057Z [right meow!] error: GET /board/admin 라우터가 없습니다. - /board/admin - GET - ::ffff:127.0.0.1 - 주승우 

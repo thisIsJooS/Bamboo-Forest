@@ -4,7 +4,7 @@
   <!-- DataTales Example -->
   <div class="card shadow mb-4">
     <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-success">{{boardName_kor}}게시판</h6>
+      <h6 class="m-0 font-weight-bold text-success">{{board.boardName_kor}}게시판</h6>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -17,17 +17,17 @@
             </tr>
           </thead>
           <tbody>
-            {% for post in posts %}
+            {% for doc in docs %}
               <tr>
                 <td>
-                  <a href="/boards/{{boardType}}/detail/{{ post.id }}">{{ post.title }}</a>
+                  <a href="/board/view?id={{board.id}}&no={{doc.id}}">{{ doc.title }}</a>
                 </td>
-                <td>{{ post.createdAt }}</td>
+                <td>{{ doc.createdAt }}</td>
 
-                {% if boardType == 'anonymous' %}
+                {% if board.boardName_eng == 'anonymous' %}
                   <td>익명</td>
                 {% else %}
-                  <td>{{ post.author }}</td>
+                  <td>{{ doc.author }}</td>
                 {% endif %}
               </tr>
             {% endfor %}
@@ -66,7 +66,7 @@
   </ul>
 
   {% if user %}
-    <a href="/boards/{{boardType}}/post" class="btn btn-success btn-icon-split">
+    <a href="/board/write?id={{board.id}}" class="btn btn-success btn-icon-split">
       <span class="icon text-white-50">
         <i class="fas fa-flag"></i>
       </span>

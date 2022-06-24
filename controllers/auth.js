@@ -66,7 +66,7 @@ exports.login = function (req, res, next) {
       }
 
       if (req.query.next_url) {
-        return res.redirect(req.query.next_url);
+        return res.redirect(`${req.query.next_url}&no=${req.query.no}`);
       } else {
         return res.redirect("/");
       }

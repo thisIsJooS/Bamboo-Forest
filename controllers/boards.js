@@ -21,7 +21,7 @@ exports.getBoards = async function (req, res, next) {
 // GET /board/lists?id=#####
 exports.getDocs = async function (req, res, next) {
   try {
-    const board_id = req.params.id;
+    const board_id = req.query.id;
 
     await fsExtra.emptyDir(path.join(__dirname, "..", "pre-uploads"), (err) => {
       if (err) {
@@ -91,7 +91,7 @@ exports.getDocs = async function (req, res, next) {
 // GET /board/write?id=######
 exports.createDocPage = async function (req, res, next) {
   try {
-    const board_id = req.params.id;
+    const board_id = req.query.id;
     const board = await Board.findOne({
       where: { id: board_id },
     });
@@ -106,7 +106,7 @@ exports.createDocPage = async function (req, res, next) {
 // POST /board/write?id=#####
 exports.createDoc = async function (req, res, next) {
   try {
-    const board_id = req.params.id;
+    const board_id = req.query.id;
     const board = await Board.findOne({
       where: { id: board_id },
     });
@@ -118,7 +118,7 @@ exports.createDoc = async function (req, res, next) {
       BoardId: board.id,
     });
 
-    res.redirect(`/boards/view?id=${new_doc.id}`);
+    res.redirect(`/board/view?id=${board_id}&no=${new_doc.id}`);
   } catch (error) {
     console.error(error);
     next(error);
@@ -132,8 +132,8 @@ exports.preUploadImage = function (req, res, next) {
 // GET /board/view?id=####&no=####
 exports.viewDoc = async function (req, res, next) {
   try {
-    const board_id = req.params.id;
-    const doc_no = req.params.no;
+    const board_id = req.query.id;
+    const doc_no = req.query.no;
 
     const doc = await Post.findOne({
       where: { BoardId: board_id, id: doc_no },
@@ -211,11 +211,13 @@ exports.viewDoc = async function (req, res, next) {
 // GET /board/modify?id=####&no=####
 exports.modifyDocPage = async function (req, res, next) {
   try {
-    const board_id = req.params.id;
-    const doc_no = req.params.doc_no;
+    const board_id = req.query.id;
+    const doc_no = req.query.no;
 
-    const doc = await Post.findOne({ where: { id: doc_no } });
-    if (req.user?.id !== post.UserId) {
+    const doc = await Post.findOne({
+      where: { id: doc_no, BoardId: board_id },
+    });
+    if (req.user?.id !== doc.UserId) {
       return res.write(
         "<script>alert('not valid access');window.location='/';</script>"
       );
@@ -230,11 +232,11 @@ exports.modifyDocPage = async function (req, res, next) {
 // POST /board/modify?id=####&no=####
 exports.modifyDoc = async function (req, res, next) {
   try {
-    const board_id = req.params.id;
-    const doc_no = req.params.no;
+    const board_id = req.query.id;
+    const doc_no = req.query.no;
 
     const doc = await Post.findOne({ where: { id: doc_no } });
-    if (req.user?.id !== post.UserId) {
+    if (req.user?.id !== doc.UserId) {
       const message = encodeURIComponent("유효하지 않은 접근입니다.");
       return res.redirect(`/?error=${message}`);
     }
@@ -251,7 +253,7 @@ exports.modifyDoc = async function (req, res, next) {
     );
 
     if (doc.img !== req.body.img_url) {
-      const imgFileName = post.img.split("/")[2];
+      const imgFileName = doc.img.split("/")[2];
       const filePath = path.join(__dirname, "..", "uploads", imgFileName);
       fs.unlink(filePath, (err) => {
         console.error(err);
@@ -270,21 +272,21 @@ exports.modifyDoc = async function (req, res, next) {
 // GET /board/delete?id=####&no=####
 exports.deleteDoc = async function (req, res, next) {
   try {
-    const board_id = req.params.id;
-    const doc_no = req.params.no;
+    const board_id = req.query.id;
+    const doc_no = req.query.no;
 
     const doc = await Post.findOne({
       where: { id: doc_no, BoardId: board_id },
     });
-    if (req.user?.id !== post.UserId) {
+    if (req.user?.id !== doc.UserId) {
       const message = encodeURIComponent("유효하지 않은 접근입니다.");
       return res.redirect(`/?error=${message}`);
     }
 
-    await Post.destroy({ where: { id: post_id, UserId: req.user?.id } });
+    await Post.destroy({ where: { id: doc_no, UserId: req.user?.id } });
 
     if (doc.img) {
-      const imgFileName = post.img.split("/")[2];
+      const imgFileName = doc.img.split("/")[2];
       const filePath = path.join(__dirname, "..", "uploads", imgFileName);
       fs.unlink(filePath, (err) => {
         console.error(err);
@@ -298,7 +300,7 @@ exports.deleteDoc = async function (req, res, next) {
   }
 };
 
-// POST /board/forms/comment_submit - req.body includes datas
+// POST /board/forms/comment_submit - req.body includes doc_no, comment
 exports.createComment = async function (req, res, next) {
   try {
     const comment = await Comment.create({
@@ -329,28 +331,11 @@ function format_date(date) {
   return require("moment")(date).format("YYYY-MM-DD HH:mm:ss");
 }
 
-// POST /board/comment/comment_update_submit
-exports.modifyComment = async function (req, res, next) {
-  try {
-    const comment = await Comment.update(
-      {
-        comment: req.body.comment,
-      },
-      {
-        where: { id: req.body.commentId, PostId: req.body.doc_no },
-      }
-    );
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-};
-
-// GET /board/comment/comment_delete_submit
+// POST /board/comment/comment_delete_submit - req.body includes doc_no, comment_id
 exports.deleteComment = async function (req, res, next) {
   try {
     const comment = await Comment.findOne({
-      where: { id: req.body.commentId, PostId: req.body.doc_no },
+      where: { id: req.body.comment_id, PostId: req.body.doc_no },
     });
 
     if (comment.UserId !== req.user?.id) {
@@ -359,7 +344,7 @@ exports.deleteComment = async function (req, res, next) {
     }
 
     await Comment.destroy({
-      where: { id: req.body.commentId, PostId: req.body.doc_no },
+      where: { id: req.body.comment_id, PostId: req.body.doc_no },
     });
 
     return res.json({ comment_id: comment.id });

@@ -78,18 +78,15 @@ router.get("/delete", isLoggedIn, boardController.deleteDoc);
 router.get("/view", boardController.viewDoc);
 
 // Comment
-// POST /board/forms/comment_submit
-router.post("/forms/comment_submit", isLoggedIn, boardController.createComment);
-
-// POST /board/comment/comment_update_submit
+// POST /board/comment/comment_submit
 router.post(
-  "comment/comment_update_submit",
+  "/comment/comment_submit",
   isLoggedIn,
-  boardController.modifyComment
+  boardController.createComment
 );
 
-// GET /board/comment/comment_delete_submit
-router.get(
+// POST /board/comment/comment_delete_submit
+router.post(
   "/comment/comment_delete_submit",
   isLoggedIn,
   boardController.deleteComment
