@@ -18,6 +18,7 @@ const indexRouter = require("./routes/index");
 const boardRouter = require("./routes/boards");
 const authRouter = require("./routes/auth");
 const adminRouter = require("./routes/admin");
+const videoRouter = require("./routes/video");
 const fs = require("fs");
 const logger = require("./logger/logger");
 const csurf = require("csurf");
@@ -89,6 +90,7 @@ app.use("/", indexRouter);
 app.use("/board", boardRouter);
 app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
+app.use("/video", videoRouter);
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);

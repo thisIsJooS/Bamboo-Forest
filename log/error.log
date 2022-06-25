@@ -38,3 +38,9 @@
 2022-06-25T10:37:57.650Z [right meow!] error: Unexpected end of form - /board/modify?id=2&no=30 - POST - ::ffff:127.0.0.1 - 주승우 
 2022-06-25T10:37:57.828Z [right meow!] error: Unexpected end of form - /board/modify?id=2&no=30 - POST - ::ffff:127.0.0.1 - 주승우 
 2022-06-25T10:40:04.331Z [right meow!] error: The "path" argument must be of type string. Received undefined - /board/modify?id=2&no=31 - POST - ::ffff:127.0.0.1 - 주승우 
+2022-06-25T14:06:37.132Z [right meow!] error: GET /favicon.ico 라우터가 없습니다. - /favicon.ico - GET - ::ffff:127.0.0.1 - undefined 
+2022-06-25T14:09:39.864Z [right meow!] error: GET /favicon.ico 라우터가 없습니다. - /favicon.ico - GET - ::ffff:127.0.0.1 - undefined 
+2022-06-25T14:41:50.312Z [right meow!] error: GET /video.njk 라우터가 없습니다. - /video.njk - GET - ::ffff:127.0.0.1 - undefined 
+2022-06-25T14:44:47.607Z [right meow!] error: GET /video/video/mindley.mp4 라우터가 없습니다. - /video/video/mindley.mp4 - GET - ::ffff:127.0.0.1 - undefined 
+2022-06-25T14:46:33.106Z [right meow!] error: GET /favicon.ico 라우터가 없습니다. - /favicon.ico - GET - ::ffff:127.0.0.1 - undefined 
+2022-06-25T14:47:15.312Z [right meow!] error: GET /favicon.ico 라우터가 없습니다. - /favicon.ico - GET - ::ffff:127.0.0.1 - undefined 
