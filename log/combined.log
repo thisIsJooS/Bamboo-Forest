@@ -58,3 +58,20 @@
 2022-06-24T17:15:01.240Z [right meow!] error: WHERE parameter "id" has invalid "undefined" value - /board/view?id=26 - GET - ::ffff:127.0.0.1 - 주승우 
 2022-06-24T17:19:26.054Z [right meow!] info: 404 Not found
 2022-06-24T17:19:26.057Z [right meow!] error: GET /board/admin 라우터가 없습니다. - /board/admin - GET - ::ffff:127.0.0.1 - 주승우 
+2022-06-25T09:03:12.065Z [right meow!] info: 500 Internal Server Error
+2022-06-25T09:33:58.001Z [right meow!] info: 500 Internal Server Error
+2022-06-25T09:33:58.003Z [right meow!] error: Invalid status code: {
+  error_message: 'username should be at least 4 characters, at most 10 characters.'
+} - /auth/login?next_url= - POST - ::ffff:127.0.0.1 - undefined 
+2022-06-25T10:02:07.767Z [right meow!] info: 404 Not found
+2022-06-25T10:02:07.768Z [right meow!] error: GET /board/undefined 라우터가 없습니다. - /board/undefined - GET - ::ffff:127.0.0.1 - undefined 
+2022-06-25T10:37:39.565Z [right meow!] info: 500 Internal Server Error
+2022-06-25T10:37:39.567Z [right meow!] error: Unexpected end of form - /board/modify?id=2&no=30 - POST - ::ffff:127.0.0.1 - 주승우 
+2022-06-25T10:37:57.115Z [right meow!] info: 500 Internal Server Error
+2022-06-25T10:37:57.116Z [right meow!] error: Unexpected end of form - /board/modify?id=2&no=30 - POST - ::ffff:127.0.0.1 - 주승우 
+2022-06-25T10:37:57.649Z [right meow!] info: 500 Internal Server Error
+2022-06-25T10:37:57.650Z [right meow!] error: Unexpected end of form - /board/modify?id=2&no=30 - POST - ::ffff:127.0.0.1 - 주승우 
+2022-06-25T10:37:57.827Z [right meow!] info: 500 Internal Server Error
+2022-06-25T10:37:57.828Z [right meow!] error: Unexpected end of form - /board/modify?id=2&no=30 - POST - ::ffff:127.0.0.1 - 주승우 
+2022-06-25T10:40:04.329Z [right meow!] info: 500 Internal Server Error
+2022-06-25T10:40:04.331Z [right meow!] error: The "path" argument must be of type string. Received undefined - /board/modify?id=2&no=31 - POST - ::ffff:127.0.0.1 - 주승우 

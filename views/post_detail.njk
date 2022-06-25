@@ -45,7 +45,6 @@
         {% endif %}
         <span class="badge rounded-pill bg-light">{{ comment.createdAt }}</span>
         {% if comment.UserId === user.id %}
-          <!-- 수정버튼 추가하고 자바스크립트 로직 추가해야함 -->
           <a class="badge rounded-pill bg-light" >
             <span class="delete-comment" data-postid="{{doc.id}}" data-commentid="{{comment.id}}" style="cursor: pointer;">삭제</span>
           </a>

@@ -1,9 +1,38 @@
 const express = require("express");
-
+const { body } = require("express-validator");
+const validate = require("../middlewares/validator");
 const { isLoggedIn, isNotLoggedIn } = require("../middlewares/auth");
 const authController = require("../controllers/auth");
 
 const router = express.Router();
+
+const validateCredential = [
+  body("username")
+    .trim()
+    .notEmpty()
+    .isLength({ min: 4, max: 10 })
+    .withMessage(
+      "username should be at least 4 characters, at most 10 characters."
+    ),
+  body("password")
+    .trim()
+    .isLength({ min: 4 })
+    .withMessage(
+      "password should be at least 4 characters, at most 10 characters."
+    ),
+  validate,
+];
+
+const validateSignup = [
+  ...validateCredential,
+  body("useremail")
+    .trim()
+    .notEmpty()
+    .isEmail()
+    .normalizeEmail()
+    .withMessage("invalid email"),
+  validate,
+];
 
 router.get("/signup", isNotLoggedIn, authController.getSignupPage);
 

@@ -2,9 +2,34 @@ const express = require("express");
 const fs = require("fs");
 const multer = require("multer");
 const path = require("path");
+const { body } = require("express-validator");
+const validate = require("../middlewares/validator");
 
 const { isLoggedIn, isNotLoggedIn } = require("../middlewares/auth");
 const boardController = require("../controllers/boards");
+
+const validateDoc = [
+  body("title")
+    .trim()
+    .notEmpty()
+    .isLength({ min: 2 })
+    .withMessage("title should be at least 2 characters."),
+  body("content")
+    .trim()
+    .notEmpty()
+    .isLength({ min: 4 })
+    .withMessage("content should be at least 4 characters."),
+  validate,
+];
+
+const validateComment = [
+  body("comment")
+    .trim()
+    .notEmpty()
+    .isLength({ min: 2 })
+    .withMessage("comment should be at least 2 characters"),
+  validate,
+];
 
 const router = express.Router();
 
@@ -57,6 +82,7 @@ router.post(
   "/write",
   isLoggedIn,
   upload.single("image"),
+  // validateDoc,
   boardController.createDoc
 );
 
@@ -68,6 +94,7 @@ router.post(
   "/modify",
   isLoggedIn,
   upload.single("image"),
+  // validateDoc,
   boardController.modifyDoc
 );
 
@@ -81,6 +108,7 @@ router.get("/view", boardController.viewDoc);
 // POST /board/comment/comment_submit
 router.post(
   "/comment/comment_submit",
+  validateComment,
   isLoggedIn,
   boardController.createComment
 );

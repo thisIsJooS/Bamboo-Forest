@@ -166,7 +166,7 @@ exports.resetPassword = async function (req, res, next) {
 
     if (!authenticatedToken) {
       const message = encodeURIComponent("만료된 토큰입니다.");
-      res.redirect(`/?error=${message}`);
+      return res.redirect(`/?error=${message}`);
     }
 
     const hash = await bcrypt.hash(req.body.password, 12);
